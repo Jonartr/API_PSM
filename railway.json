@@ -1,24 +1,20 @@
-<<<<<<< HEAD
 {
-    "$schema": "https://railway.app/railway.schema.json",
-    "build": {
-        "builder": "NIXPACKS",
-        "buildCommand": "composer install --no-dev --optimize-autoloader"
+    "name": "jonartr/api-psm",
+    "type": "project",
+    "require": {
+        "php": "^8.1",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-pdo_mysql": "*",
+        "ext-json": "*"
     },
-    "deploy": {
-        "startCommand": "php -S 0.0.0.0:$PORT -t public",
-        "restartPolicyType": "ON_FAILURE"
+    "autoload": {
+        "psr-4": {
+            "App\\": "./"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
     }
 }
-=======
-{
-    "$schema": "https://railway.app/railway.schema.json",
-    "build": {
-        "builder": "NIXPACKS"
-    },
-    "deploy": {
-        "startCommand": "php -S 0.0.0.0:$PORT -t public",
-        "restartPolicyType": "ON_FAILURE"
-    }
-}
->>>>>>> a73e617353fce874843eea584c612aeb65e60bcd
+
