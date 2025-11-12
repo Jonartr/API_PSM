@@ -1,20 +1,9 @@
 {
-    "name": "jonartr/api-psm",
-    "type": "project",
-    "require": {
-        "php": "^8.2",
-        "ext-pdo": "*",
-        "ext-pdo_pgsql": "*",
-        "ext-pdo_mysql": "*",
-        "ext-json": "*"
+    "$schema": "https://railway.app/railway.schema.json",
+    "build": {
+        "builder": "NIXPACKS"
     },
-    "autoload": {
-        "psr-4": {
-            "App\\": "./"
-        }
-    },
-    "config": {
-        "optimize-autoloader": true
+    "deploy": {
+        "startCommand": "php -S 0.0.0.0:$PORT -t public"
     }
 }
-
