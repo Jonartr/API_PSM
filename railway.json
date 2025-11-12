@@ -2,7 +2,7 @@
     "name": "jonartr/api-psm",
     "type": "project",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-pdo": "*",
         "ext-pdo_pgsql": "*",
         "ext-pdo_mysql": "*",
