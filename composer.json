@@ -1,0 +1,25 @@
+{
+    "name": "jonartr/api-psm",
+    "description": "API PSM para Android",
+    "type": "project",
+    "require": {
+        "php": "^8.1",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*", 
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "ext-gd": "*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "chmod -R 755 public"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "platform-check": false
+    }
+}
