@@ -23,9 +23,9 @@ class Like
             $query = "INSERT INTO votes_story (id_story, email, like_vote) VALUES (:id,:email,:like);";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param(":id", $id);
-            $stmt->bind_param(":email", $email);
-            $stmt->bind_param(":like", $like);
+            $stmt->bindParam(":id", $id);
+            $stmt->bindParam(":email", $email);
+            $stmt->bindParam(":like", $like);
             $stmt->execute();
 
             return true;
