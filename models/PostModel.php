@@ -50,7 +50,7 @@ class Publicaciones
                   INNER JOIN image_story ON publicacion.id_story = image_story.id_story
                   ORDER BY publicacion.creation_date DESC";
 
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->conn->prepare($query);
             $stmt->execute();
 
             // Obtener resultado de la consulta SELECT
@@ -84,7 +84,7 @@ class Publicaciones
 
         try {
             $query = "INSERT INTO image_story (id_story, email,file_path) VALUES (:idphoto,:email,:image); ";
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":image", $image);
             $stmt->bindParam(":idphoto", $idphoto);
             $stmt->bindParam(":email", $email);
