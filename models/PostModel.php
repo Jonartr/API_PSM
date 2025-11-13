@@ -20,15 +20,15 @@ class Publicaciones
 
 
         try {
-            $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title,:description,:email); ";
+            $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title,:descriptio,:email); ";
             $stmt = $this->db->prepare($query);
             $stmt->bind_param(":title", $title);
-            $stmt->bind_param(":description", $descr);
+            $stmt->bind_param(":descriptio", $descr);
             $stmt->bind_param(":email", $email);
             $stmt->execute();
 
             $postId = $this->db->insert_id;
-            $this->db->commit();
+
             return $postId;
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
