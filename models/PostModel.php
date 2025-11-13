@@ -4,12 +4,12 @@ require_once(__DIR__ . '/../config/Database.php');
 class Publicaciones
 {
 
-    private $db;
+    private $conn;
 
     public function __construct()
     {
         $database = new Database();
-        $this->db = $database->getConnection();
+        $this->conn = $database->getConnection();
     }
 
     public function nuevoPost($post)
@@ -21,13 +21,13 @@ class Publicaciones
 
         try {
             $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title,:descriptio,:email); ";
-            $stmt = $this->db->prepare($query);
+            $stmt = $this->conn->prepare($query);
             $stmt->bind_param(":title", $title);
             $stmt->bind_param(":descriptio", $descr);
             $stmt->bind_param(":email", $email);
             $stmt->execute();
 
-            $postId = $this->db->insert_id;
+           $postId = $this->conn->lastInsertId();
 
             return $postId;
         } catch (Error $error) {
