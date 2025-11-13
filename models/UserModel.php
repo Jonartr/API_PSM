@@ -3,7 +3,6 @@ require_once(__DIR__ . '/../config/Database.php');
 
 class Usuarios
 {
-    private $db;
     private $conn;
     
     public function __construct()
@@ -15,10 +14,10 @@ class Usuarios
     public function loginUsuario($email, $password)
     {
         try {
-            $query = "SELECT id, email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email AND pass_word = :pass_word";
+            $query = "SELECT id, email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email AND pass_word = :password";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":email", $email);
-            $stmt->bindParam(":pass_word", $password);
+            $stmt->bindParam(":password", $password);
             $stmt->execute();
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -27,7 +26,8 @@ class Usuarios
             return $user;
         } catch (PDOException $e) {
             error_log("Error en loginUsuario: " . $e->getMessage());
-            return false;
+            $data = ["email" => $email, "pass" =>$password];
+            return $data;
         }
     }
 
