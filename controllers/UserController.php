@@ -35,7 +35,7 @@ class UserController
                         'name' =>  $name,
                         'lastname' => $lastname,
                         'alias' => $alias,
-                        'image' =>  $imagenPath ? "http://192.168.100.215/PSM/$imagenPath" : null
+                        'image' =>  $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null
                     ];
 
 
