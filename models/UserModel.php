@@ -15,16 +15,16 @@ class Usuarios
     public function loginUsuario($email, $password)
     {
         try {
-            $query = "SELECT id, email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email AND pass_word = :password";
+            $query = "SELECT id, email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email AND pass_word = :pass_word";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":email", $email);
-            $stmt->bindParam(":password", $password);
+            $stmt->bindParam(":pass_word", $password);
             $stmt->execute();
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
       
-            return true;
+            return $user;
         } catch (PDOException $e) {
             error_log("Error en loginUsuario: " . $e->getMessage());
             return false;
