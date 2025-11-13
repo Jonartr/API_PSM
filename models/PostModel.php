@@ -53,9 +53,6 @@ class Publicaciones
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
 
-            // Obtener resultado de la consulta SELECT
-            $result = $stmt->get_result();
-
              $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);;
 
             return $posts;
