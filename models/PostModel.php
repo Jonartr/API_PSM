@@ -56,19 +56,9 @@ class Publicaciones
             // Obtener resultado de la consulta SELECT
             $result = $stmt->get_result();
 
-            $posts = [];
+             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);;
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $posts[] = $row;
-                }
-
-
-                return $posts;
-            } else {
-
-                return [];
-            }
+            return $posts;
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
             return  $data;
