@@ -85,9 +85,9 @@ class Publicaciones
         try {
             $query = "INSERT INTO image_story (id_story, email,file_path) VALUES (:idphoto,:email,:image); ";
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param(":image", $image);
-            $stmt->bind_param(":idphoto", $idphoto);
-            $stmt->bind_param(":email", $email);
+            $stmt->bindParam(":image", $image);
+            $stmt->bindParam(":idphoto", $idphoto);
+            $stmt->bindParam(":email", $email);
             $stmt->execute();
             return true;
         } catch (Error $error) {
