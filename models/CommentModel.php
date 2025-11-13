@@ -22,10 +22,12 @@ class Comentario
             $comment = $data['comment'];
 
 
-            $query = "INSERT INTO comments_story (id_story, email, text_comment) VALUES (?,?,?);";
+            $query = "INSERT INTO comments_story (id_story, email, text_comment) VALUES (:id,:email,:comment);";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param("sss", $id, $email, $comment);
+            $stmt->bind_param(":id", $id);
+            $stmt->bind_param(":email", $email);
+            $stmt->bind_param(":comment", $comment);
             $stmt->execute();
 
             return true;

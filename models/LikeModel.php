@@ -20,10 +20,12 @@ class Like
             $like = $data['like'];
 
 
-            $query = "INSERT INTO votes_story (id_story, email, like_vote) VALUES (?,?,?);";
+            $query = "INSERT INTO votes_story (id_story, email, like_vote) VALUES (:id,:email,:like);";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param("sss", $id, $email, $like);
+            $stmt->bind_param(":id", $id);
+            $stmt->bind_param(":email", $email);
+            $stmt->bind_param(":like", $like);
             $stmt->execute();
 
             return true;
@@ -32,15 +34,16 @@ class Like
         }
     }
 
-    public function loadLike() {
-          try {
+    public function loadLike()
+    {
+        try {
 
             $query = "SELECT id_story, email, like_vote FROM votes_story;";
 
             $stmt = $this->db->prepare($query);
             $stmt->execute();
 
-                  $result = $stmt->get_result();
+            $result = $stmt->get_result();
 
             $like = [];
 
@@ -60,6 +63,5 @@ class Like
         } catch (Error $error) {
             return false;
         }
-
     }
 }

@@ -20,10 +20,11 @@ class Favorito
             $email = $data['email'];
 
 
-            $query = "INSERT INTO favorites (id_story, email) VALUES (?,?);";
+            $query = "INSERT INTO favorites (id_story, email) VALUES (:id,:email);";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param("ss", $id, $email);
+            $stmt->bind_param(":id", $id);
+            $stmt->bind_param(":email", $email);
             $stmt->execute();
 
             return true;
@@ -48,10 +49,11 @@ class Favorito
                   FROM publicacion 
                   INNER JOIN image_story ON publicacion.id_story = image_story.id_story
                   INNER JOIN favorites ON publicacion.id_story = favorites.id_story
-                  WHERE favorites.email = 'hola@hola.com'
+                  WHERE favorites.email = :email
                   ORDER BY publicacion.creation_date DESC";
 
             $stmt = $this->db->prepare($query);
+             $stmt->bind_param(":id", $query);
             $stmt->execute();
 
             $result = $stmt->get_result();

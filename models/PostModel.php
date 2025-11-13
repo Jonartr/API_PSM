@@ -21,9 +21,11 @@ class Publicaciones
         $this->db->begin_transaction();
 
         try {
-            $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (?,?,?); ";
+            $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title,:description,:email); ";
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param("sss", $title, $descr, $email);
+            $stmt->bind_param(":title", $title);
+            $stmt->bind_param(":description", $descr);
+            $stmt->bind_param(":email", $email);
             $stmt->execute();
 
             $postId = $this->db->insert_id;
@@ -80,9 +82,11 @@ class Publicaciones
         $idphoto = $data['idphoto'];
 
         try {
-            $query = "INSERT INTO image_story (id_story, email,file_path) VALUES (?,?,?); ";
+            $query = "INSERT INTO image_story (id_story, email,file_path) VALUES (:idphoto,:email,:image); ";
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param("iss", $idphoto, $email,  $image);
+            $stmt->bind_param(":image", $image);
+            $stmt->bind_param(":idphoto", $idphoto);
+            $stmt->bind_param(":email", $email);
             $stmt->execute();
             return true;
         } catch (Error $error) {
