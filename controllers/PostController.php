@@ -58,7 +58,7 @@ class PostController
                     }
                 }
 
-                //$this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result]);
+                $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result]);
             } else {
                 $this->sendResponse(401, ["message" => "Error al crear publicacion"]);
             }
