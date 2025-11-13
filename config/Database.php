@@ -1,46 +1,48 @@
 <?php
 class Database {
-    private $conn;
+   public function __construct() {
+    $config = $this->getDatabaseConfig();
     
-    public function __construct() {
-        // CONFIGURACIÓN PARA RAILWAY (PostgreSQL)
-        $databaseUrl = getenv('DATABASE_URL');
-        
-        if ($databaseUrl) {
-            // PostgreSQL en Railway
-            $dbParams = parse_url($databaseUrl);
-            $host = $dbParams['host'];
-            $port = $dbParams['port'] ?? '5432';
-            $dbname = ltrim($dbParams['path'], '/');
-            $username = $dbParams['user'];
-            $password = $dbParams['pass'];
-            
-            $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
-        } else {
-            // MySQL para desarrollo local
-            $dsn = "mysql:host=localhost;dbname=tu_db;charset=utf8mb4";
-            $username = "root";
-            $password = "";
-        }
-        
-        try {
-            $this->conn = new PDO($dsn, $username, $password, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ]);
-        } catch(PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            http_response_code(500);
-            echo json_encode([
-                "success" => false,
-                "message" => "Error de conexión a la base de datos"
-            ]);
-            exit();
-        }
+    try {
+        $this->conn = new PDO($config['dsn'], $config['username'], $config['password'], [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false
+        ]);
+    } catch(PDOException $e) {
+        $this->handleError($e->getMessage(), $config['dsn']);
+    }
+}
+
+private function getDatabaseConfig() {
+    // 1. PostgreSQL Railway
+    if ($databaseUrl = getenv('DATABASE_URL')) {
+        $params = parse_url($databaseUrl);
+        return [
+            'dsn' => "pgsql:host={$params['host']};port={$params['port']};dbname=" . ltrim($params['path'], '/'),
+            'username' => $params['user'],
+            'password' => $params['pass'],
+            'type' => 'postgresql'
+        ];
     }
     
-    public function getConnection() {
-        return $this->conn;
+    // 2. MySQL Railway
+    if ($mysqlHost = getenv('MYSQLHOST')) {
+        return [
+            'dsn' => "mysql:host=$mysqlHost;port=" . (getenv('MYSQLPORT') ?: '3306') . ";dbname=" . getenv('MYSQLDATABASE') . ";charset=utf8mb4",
+            'username' => getenv('MYSQLUSER'),
+            'password' => getenv('MYSQLPASSWORD'),
+            'type' => 'mysql'
+        ];
     }
+    
+    // 3. MySQL Local (fallback)
+    return [
+        'dsn' => "mysql:host=localhost;dbname=tu_db;charset=utf8mb4",
+        'username' => "root",
+        'password' => "",
+        'type' => 'mysql_local'
+    ];
+}
 }
 ?>
