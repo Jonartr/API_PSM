@@ -5,68 +5,74 @@ class Database {
     public function __construct() {
         $config = $this->getDatabaseConfig();
         
+        // Log de configuración
+        error_log("🎯 Configuración BD: " . $config['type']);
+        
         try {
             $this->conn = new PDO($config['dsn'], $config['username'], $config['password'], [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_TIMEOUT => 30,
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
             ]);
             
-            // Log de conexión exitosa
-            error_log("✅ Conexión exitosa a: " . $config['type']);
+            error_log("✅ Conexión MySQL exitosa a: " . $config['host']);
             
         } catch(PDOException $e) {
-            $this->handleError($e->getMessage(), $config['dsn']);
+            $this->handleError($e->getMessage(), $config);
         }
     }
     
     private function getDatabaseConfig() {
-        // 1. PostgreSQL Railway
-        if ($databaseUrl = getenv('DATABASE_URL')) {
-            $params = parse_url($databaseUrl);
-            return [
-                'dsn' => "pgsql:host={$params['host']};port={$params['port']};dbname=" . ltrim($params['path'], '/'),
-                'username' => $params['user'],
-                'password' => $params['pass'],
-                'type' => 'postgresql'
-            ];
-        }
-        
-        // 2. MySQL Railway
+        // 1. MySQL RAILWAY (PRIMERA OPCIÓN)
         if ($mysqlHost = getenv('MYSQLHOST')) {
+            error_log("🎯 Usando MySQL Railway");
+            
             return [
-                'dsn' => "mysql:host=$mysqlHost;port=" . (getenv('MYSQLPORT') ?: '3306') . ";dbname=" . getenv('MYSQLDATABASE') . ";charset=utf8mb4",
-                'username' => getenv('MYSQLUSER'),
-                'password' => getenv('MYSQLPASSWORD'),
-                'type' => 'mysql'
+                'dsn' => "mysql:host=" . getenv('MYSQLHOST') . 
+                         ";port=" . (getenv('MYSQLPORT') ?: '3306') . 
+                         ";dbname=" . getenv('MYSQLDATABASE') . 
+                         ";charset=utf8mb4",
+                'username' => getenv('MYSQLUSER') ?: '',
+                'password' => getenv('MYSQLPASSWORD') ?: '',
+                'type' => 'mysql_railway',
+                'host' => getenv('MYSQLHOST'),
+                'database' => getenv('MYSQLDATABASE')
             ];
         }
         
-        // 3. MySQL Local (fallback)
+        // 2. MySQL LOCAL (FALLBACK - DESARROLLO)
+        error_log("⚠️ Usando MySQL Local (FALLBACK)");
         return [
             'dsn' => "mysql:host=localhost;dbname=tu_db;charset=utf8mb4",
             'username' => "root",
             'password' => "",
-            'type' => 'mysql_local'
+            'type' => 'mysql_local',
+            'host' => 'localhost',
+            'database' => 'tu_db'
         ];
     }
     
-    // MÉTODO handleError QUE FALTABA
-    private function handleError($message, $dsn = null) {
-        // Log detallado para debugging
+    private function handleError($message, $config) {
         error_log("❌ DATABASE ERROR: " . $message);
-        if ($dsn) {
-            error_log("📡 DSN: " . $dsn);
-        }
+        error_log("📡 Config Type: " . $config['type']);
+        error_log("🔗 DSN: " . ($config['dsn'] ?? 'No DSN'));
         
-        // No mostrar detalles sensibles en producción
-        $showDetails = getenv('RAILWAY_ENVIRONMENT') !== 'production';
+        $showDetails = true; // Mostrar detalles para debugging
         
         http_response_code(500);
         echo json_encode([
             "success" => false,
             "message" => $showDetails ? $message : "Error de conexión a la base de datos",
-            "error_type" => "database_connection_failed"
+            "error_type" => "database_connection_failed",
+            "config_type" => $config['type'],
+            "debug_info" => $showDetails ? [
+                "mysql_host" => getenv('MYSQLHOST') ?: 'NOT_SET',
+                "mysql_database" => getenv('MYSQLDATABASE') ?: 'NOT_SET',
+                "mysql_user" => getenv('MYSQLUSER') ?: 'NOT_SET',
+                "mysql_port" => getenv('MYSQLPORT') ?: '3306'
+            ] : 'hidden'
         ]);
         exit();
     }
@@ -78,57 +84,34 @@ class Database {
     // Método para verificar conexión
     public function testConnection() {
         try {
-            if ($this->conn) {
-                $stmt = $this->conn->query("SELECT 1 as test");
-                $result = $stmt->fetch();
-                return $result && $result['test'] == 1;
-            }
-            return false;
+            $stmt = $this->conn->query("SELECT 1 as test, NOW() as server_time");
+            $result = $stmt->fetch();
+            return [
+                "connected" => true,
+                "server_time" => $result['server_time'],
+                "mysql_version" => $this->conn->getAttribute(PDO::ATTR_SERVER_VERSION)
+            ];
         } catch (Exception $e) {
             error_log("❌ Test conexión falló: " . $e->getMessage());
-            return false;
+            return ["connected" => false, "error" => $e->getMessage()];
         }
     }
     
-    // Método para obtener info de la BD
+
+    
+    // Método para obtener información de la BD
     public function getDatabaseInfo() {
         try {
-            if ($this->conn) {
-                if (getenv('DATABASE_URL')) {
-                    // PostgreSQL
-                    $stmt = $this->conn->query("SELECT version() as version, current_database() as db_name");
-                } else {
-                    // MySQL
-                    $stmt = $this->conn->query("SELECT version() as version, database() as db_name");
-                }
-                return $stmt->fetch();
-            }
-            return ["error" => "No hay conexión"];
+            $stmt = $this->conn->query("
+                SELECT 
+                    VERSION() as mysql_version,
+                    DATABASE() as database_name,
+                    NOW() as server_time,
+                    @@hostname as hostname
+            ");
+            return $stmt->fetch();
         } catch (Exception $e) {
             return ["error" => $e->getMessage()];
-        }
-    }
-    
-    // Método para inicializar tablas si no existen
-    public function initTables() {
-        try {
-            // Crear tabla favorites si no existe
-            $createTableSQL = "
-            CREATE TABLE IF NOT EXISTS favorites (
-                id SERIAL PRIMARY KEY,
-                user_id VARCHAR(255) NOT NULL,
-                item_id VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(user_id, item_id)
-            )";
-            
-            $this->conn->exec($createTableSQL);
-            error_log("✅ Tabla 'favorites' creada/verificada");
-            
-            return true;
-        } catch (Exception $e) {
-            error_log("❌ Error creando tabla: " . $e->getMessage());
-            return false;
         }
     }
 }
