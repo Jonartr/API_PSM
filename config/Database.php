@@ -26,7 +26,7 @@ class Database {
     
     private function getDatabaseConfig() {
         // 1. MySQL RAILWAY (PRIMERA OPCIÓN)
-        if ($mysqlHost = getenv('MYSQLHOST')) {
+        if ($mysqlHost = getenv('DB_HOST')) {
             error_log("🎯 Usando MySQL Railway");
             
             return [
