@@ -26,7 +26,7 @@ class AuthController
             if ($loginuser) {
                 $this->sendResponse(201, $loginuser);
             } else {
-                $this->sendResponse(404, ["message" => "Datos incorrectos","data" => $data]);
+                $this->sendResponse(404, ["message" => "Datos incorrectos","data" => $data, "login" =>$loginuser]);
             }
         }
     }
