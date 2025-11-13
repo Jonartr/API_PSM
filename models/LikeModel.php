@@ -46,21 +46,9 @@ class Like
 
             $result = $stmt->get_result();
 
-            $like = [];
+            $like = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $like[] = $row;
-                }
-
-
-                return $like;
-            } else {
-
-                return [];
-            }
-
-            return true;
+            return  $like;
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
             return $data;
