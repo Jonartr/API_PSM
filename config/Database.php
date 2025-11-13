@@ -30,15 +30,15 @@ class Database {
             error_log("🎯 Usando MySQL Railway");
             
             return [
-                'dsn' => "mysql:host=" . getenv('MYSQLHOST') . 
-                         ";port=" . (getenv('MYSQLPORT') ?: '3306') . 
-                         ";dbname=" . getenv('MYSQLDATABASE') . 
+                'dsn' => "mysql:host=" . getenv('DB_HOST') . 
+                         ";port=" . (getenv('DB_PORT') ?: '3306') . 
+                         ";dbname=" . getenv('DB_DATABASE') . 
                          ";charset=utf8mb4",
-                'username' => getenv('MYSQLUSER') ?: '',
-                'password' => getenv('MYSQLPASSWORD') ?: '',
+                'username' => getenv('DB_USER') ?: '',
+                'password' => getenv('DB_PASSWORD') ?: '',
                 'type' => 'mysql_railway',
-                'host' => getenv('MYSQLHOST'),
-                'database' => getenv('MYSQLDATABASE')
+                'host' => getenv('DB_HOST'),
+                'database' => getenv('DB_DATABASE')
             ];
         }
         
@@ -68,10 +68,10 @@ class Database {
             "error_type" => "database_connection_failed",
             "config_type" => $config['type'],
             "debug_info" => $showDetails ? [
-                "mysql_host" => getenv('MYSQLHOST') ?: 'NOT_SET',
-                "mysql_database" => getenv('MYSQLDATABASE') ?: 'NOT_SET',
-                "mysql_user" => getenv('MYSQLUSER') ?: 'NOT_SET',
-                "mysql_port" => getenv('MYSQLPORT') ?: '3306'
+                "mysql_host" => getenv('DB_HOST') ?: 'NOT_SET',
+                "mysql_database" => getenv('DB_DATABASE') ?: 'NOT_SET',
+                "mysql_user" => getenv('DB_USER') ?: 'NOT_SET',
+                "mysql_port" => getenv('DB_PORT') ?: '3306'
             ] : 'hidden'
         ]);
         exit();
