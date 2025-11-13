@@ -58,6 +58,9 @@ class PostController
                         }
                     }
                 }
+                else{
+                     $this->sendResponse(404, ["message" => "No se encontro imagen"]);
+                }
 
                 $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result, "photodata:" => $photodata, "path" =>  $imagenPath]);
             } else {
