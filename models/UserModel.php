@@ -23,10 +23,8 @@ class Usuarios
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user) {
-                return $user;
-            }
-            return false;
+      
+            return true;
         } catch (PDOException $e) {
             error_log("Error en loginUsuario: " . $e->getMessage());
             return false;
