@@ -20,11 +20,11 @@ class Publicaciones
 
 
         try {
-            $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title,:descriptio,:email); ";
+            $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title, :description, :email);";
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param(":title", $title);
-            $stmt->bind_param(":descriptio", $descr);
-            $stmt->bind_param(":email", $email);
+            $stmt->bindParam(":title", $title);
+            $stmt->bindParam(":descriptio", $descr);
+            $stmt->bindParam(":email", $email);
             $stmt->execute();
 
            $postId = $this->conn->lastInsertId();
