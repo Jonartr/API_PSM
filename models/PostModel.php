@@ -23,7 +23,7 @@ class Publicaciones
             $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title, :description, :email);";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":title", $title);
-            $stmt->bindParam(":descriptio", $descr);
+            $stmt->bindParam(":description", $descr);
             $stmt->bindParam(":email", $email);
             $stmt->execute();
 
