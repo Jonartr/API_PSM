@@ -35,7 +35,8 @@ class PostController
             ];
 
             $result = $this->postModel->nuevoPost($data);
-
+            $photodata = null;
+              $imagenPath = null;
             if ($result != null) {
 
                 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -58,7 +59,7 @@ class PostController
                     }
                 }
 
-               // $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result]);
+                $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result, "photodata:" => $photodata, "path" =>  $imagenPath]);
             } else {
                 $this->sendResponse(401, ["message" => "Error al crear publicacion"]);
             }
