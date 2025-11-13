@@ -14,7 +14,7 @@ class Usuarios
     public function loginUsuario($email, $password)
     {
         try {
-            $query = "SELECT id, email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email AND pass_word = :password";
+            $query = "SELECT email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email AND pass_word = :password";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":email", $email);
             $stmt->bindParam(":password", $password);
