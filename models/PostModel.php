@@ -31,7 +31,8 @@ class Publicaciones
             $this->db->commit();
             return $postId;
         } catch (Error $error) {
-            return false;
+            $data = ["error" => $error->getMessage()];
+            return  $data;
         }
     }
 
@@ -69,7 +70,8 @@ class Publicaciones
                 return [];
             }
         } catch (Error $error) {
-            return false;
+            $data = ["error" => $error->getMessage()];
+            return  $data;
         }
     }
 
@@ -89,7 +91,8 @@ class Publicaciones
             $stmt->execute();
             return true;
         } catch (Error $error) {
-            return false;
+            $data = ["error" => $error->getMessage()];
+            return  $data;
         }
     }
 }

@@ -29,7 +29,8 @@ class Favorito
 
             return true;
         } catch (Error $error) {
-            return false;
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 
@@ -53,7 +54,7 @@ class Favorito
                   ORDER BY publicacion.creation_date DESC";
 
             $stmt = $this->db->prepare($query);
-             $stmt->bind_param(":id", $query);
+            $stmt->bind_param(":id", $query);
             $stmt->execute();
 
             $result = $stmt->get_result();
@@ -72,7 +73,8 @@ class Favorito
                 return [];
             }
         } catch (Error $error) {
-            return [];
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 }

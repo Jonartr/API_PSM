@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../config/Database.php');
 class Usuarios
 {
     private $conn;
-    
+
     public function __construct()
     {
         $database = new Database();
@@ -22,10 +22,10 @@ class Usuarios
 
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      
+
             return $user;
-        } catch (PDOException $e) {
-            $data = ["error" => $e->getMessage()];
+        } catch (PDOException $error) {
+            $data = ["error" => $error->getMessage()];
             return $data;
         }
     }
@@ -43,14 +43,14 @@ class Usuarios
             $query = "INSERT INTO usuarios (email, pass_word, nam_e, last_name, alias, image_avatar) 
                       VALUES (:email, :password, :name, :lastname, :alias, :image)";
             $stmt = $this->conn->prepare($query);
-            
+
             $stmt->bindParam(":email", $email);
             $stmt->bindParam(":password", $password);
             $stmt->bindParam(":name", $name);
             $stmt->bindParam(":lastname", $lastname);
             $stmt->bindParam(":alias", $alias);
             $stmt->bindParam(":image", $image);
-            
+
             if ($stmt->execute()) {
                 return [
                     "success" => true,
@@ -58,14 +58,9 @@ class Usuarios
                 ];
             }
             return ["success" => false, "error" => "No se pudo insertar usuario"];
-            
-        } catch (PDOException $e) {
-            error_log("Error en nuevoUsuario: " . $e->getMessage());
-            return [
-                "success" => false, 
-                "error" => $e->getMessage(),
-                "error_code" => $e->getCode()
-            ];
+        } catch (PDOException $error) {
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 
@@ -81,13 +76,13 @@ class Usuarios
             $query = "UPDATE usuarios SET nam_e = :name, last_name = :lastname, alias = :alias, image_avatar = :image 
                       WHERE email = :email";
             $stmt = $this->conn->prepare($query);
-            
+
             $stmt->bindParam(":name", $name);
             $stmt->bindParam(":lastname", $lastname);
             $stmt->bindParam(":alias", $alias);
             $stmt->bindParam(":image", $image);
             $stmt->bindParam(":email", $email);
-            
+
             if ($stmt->execute()) {
                 return [
                     "success" => true,
@@ -95,13 +90,9 @@ class Usuarios
                 ];
             }
             return ["success" => false, "error" => "No se pudo actualizar usuario"];
-            
-        } catch (PDOException $e) {
-            error_log("Error en actualizarUsuario: " . $e->getMessage());
-            return [
-                "success" => false, 
-                "error" => $e->getMessage()
-            ];
+        } catch (PDOException $error) {
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 
@@ -110,10 +101,10 @@ class Usuarios
         try {
             $query = "UPDATE usuarios SET pass_word = :password WHERE email = :email";
             $stmt = $this->conn->prepare($query);
-            
+
             $stmt->bindParam(":password", $password);
             $stmt->bindParam(":email", $email);
-            
+
             if ($stmt->execute()) {
                 return [
                     "success" => true,
@@ -121,13 +112,9 @@ class Usuarios
                 ];
             }
             return ["success" => false, "error" => "No se pudo actualizar contraseña"];
-            
-        } catch (PDOException $e) {
-            error_log("Error en actualizarPassword: " . $e->getMessage());
-            return [
-                "success" => false, 
-                "error" => $e->getMessage()
-            ];
+        } catch (PDOException $error) {
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 
@@ -141,10 +128,9 @@ class Usuarios
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
-            
-        } catch (PDOException $e) {
-            error_log("Error en obtenerUsuarioPorEmail: " . $e->getMessage());
-            return false;
+        } catch (PDOException $error) {
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 
@@ -158,11 +144,9 @@ class Usuarios
             $stmt->execute();
 
             return $stmt->fetch() !== false;
-            
-        } catch (PDOException $e) {
-            error_log("Error en emailExiste: " . $e->getMessage());
-            return false;
+        } catch (PDOException $error) {
+            $data = ["error" => $error->getMessage()];
+            return  $data;
         }
     }
 }
-?>

@@ -30,7 +30,8 @@ class Like
 
             return true;
         } catch (Error $error) {
-            return false;
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 
@@ -61,7 +62,8 @@ class Like
 
             return true;
         } catch (Error $error) {
-            return false;
+            $data = ["error" => $error->getMessage()];
+            return $data;
         }
     }
 }
