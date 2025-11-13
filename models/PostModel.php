@@ -18,7 +18,6 @@ class Publicaciones
         $descr = $post['description'];
         $email = $post['email'];
 
-        $this->db->begin_transaction();
 
         try {
             $query = "INSERT INTO publicacion (title_story, descr_story,email) VALUES (:title,:description,:email); ";
