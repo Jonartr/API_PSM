@@ -25,8 +25,7 @@ class Usuarios
       
             return $user;
         } catch (PDOException $e) {
-            error_log("Error en loginUsuario: " . $e->getMessage());
-            $data = ["email" => $email, "pass" =>$password];
+            $data = ["error" => $e->getMessage()];
             return $data;
         }
     }
