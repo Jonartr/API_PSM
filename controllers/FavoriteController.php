@@ -34,7 +34,7 @@ class FavoriteController
 
     public function getFavorite()
     {
-                $result = $this->Favorite->loadFavorite( $email);
+                $result = $this->Favorite->loadFavorite();
                 $this->sendResponse(200, $result);
     }
 
