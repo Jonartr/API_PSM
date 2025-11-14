@@ -10,51 +10,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit();
 }
 
-// =============================================
-// NUEVO: MANEJO DE RUTAS PARA RAILWAY
-// =============================================
-
-// Obtener la ruta solicitada (sin .htaccess)
 $request_uri = $_SERVER['REQUEST_URI'];
 $script_name = $_SERVER['SCRIPT_NAME'];
 
-// Remover el base path si existe
+
 $base_path = dirname($script_name);
 if ($base_path != '/') {
     $request_uri = str_replace($base_path, '', $request_uri);
 }
 
-// Limpiar la URI
+
 $request_uri = parse_url($request_uri, PHP_URL_PATH);
 $request_uri = trim($request_uri, '/');
 
-// Si es la raíz, mostrar estado
-if ($request_uri === '' || $request_uri === 'public' || $request_uri === 'public/') {
-    echo json_encode([
-        "status" => "success",
-        "message" => "API funcionando en Railway",
-        "timestamp" => date('Y-m-d H:i:s'),
-        "endpoints" => [
-            "POST /auth/login" => "Iniciar sesión",
-            "POST /auth/register" => "Registrar usuario",
-            "GET|POST /user/profile" => "Perfil de usuario",
-            "PUT /user/password" => "Actualizar contraseña",
-            "POST|GET /post" => "Gestión de posts",
-            "POST /likes/toggle" => "Toggle like",
-            "GET /likes/check" => "Verificar like",
-            "POST|GET /comments" => "Gestión de comentarios",
-            "POST|GET /favorites" => "Gestión de favoritos"
-        ]
-    ]);
-    exit();
-}
-
-// Asignar la ruta para el enrutador
 $request_url = $request_uri;
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Incluir controladores con rutas absolutas
 require_once(__DIR__ . '/../controllers/AuthController.php');
 require_once(__DIR__ . '/../controllers/UserController.php');
 require_once(__DIR__ . '/../controllers/PostController.php');
@@ -88,9 +60,12 @@ $routes = [
         'GET' => 'CommentController@getComments'
     ],
 
-    'favorites' => [
-        'POST' => 'FavoriteController@newFavorite',
-        'GET' => 'FavoriteController@getFavorite'
+    'favorites/create' => [
+        'POST' => 'FavoriteController@newFavorite'
+    ]
+
+    'favorites/get' => [
+        'POST' => 'FavoriteController@getFavorite'
     ]
 ];
 
