@@ -32,7 +32,8 @@ class Comentario
 
             return true;
         } catch (Error $error) {
-            return false;
+             $data = ["error" => $error->getMessage()];
+            return  $data;
         }
     }
 
@@ -49,7 +50,8 @@ class Comentario
                 return $comments;
 
         } catch (Error $error) {
-            return false;
+             $data = ["error" => $error->getMessage()];
+            return  $data;
         }
     }
 }
