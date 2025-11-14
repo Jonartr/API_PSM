@@ -37,7 +37,6 @@ class Favorito
     public function loadFavorite($email)
     {
 
-
         try {
             $query = "SELECT 
                     publicacion.id_story as 'idfavorito', 
@@ -50,11 +49,9 @@ class Favorito
                   FROM publicacion 
                   INNER JOIN image_story ON publicacion.id_story = image_story.id_story
                   INNER JOIN favorites ON publicacion.id_story = favorites.id_story
-                  WHERE favorites.email = :email
                   ORDER BY publicacion.creation_date DESC";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bindParam(":email", $email);
             $stmt->execute();
 
 
