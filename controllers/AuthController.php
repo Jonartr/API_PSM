@@ -66,7 +66,7 @@ class AuthController
                     $userRegister = $this->userModel->nuevoUsuario($userData);
 
                     if ($userRegister) {
-                        $this->sendResponse(201, ["message" => "Registro de usuario correcto", "image" => $imagenPath]);
+                        $this->sendResponse(201, ["message" => "Registro de usuario correcto", "data" =>  $userRegister]);
                     } else {
                         $this->sendResponse(404, ["message" => "Error al registrar usuario"]);
                     }
