@@ -40,6 +40,9 @@ class FavoriteController
                 $result = $this->Favorite->loadFavorite( $email);
                 $this->sendResponse(200, $result);
           }
+          else{
+               $this->sendResponse(404, ["message" => "Error de formato JSON"]);
+          }
       
     }
 
