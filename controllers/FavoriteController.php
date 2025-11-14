@@ -34,16 +34,8 @@ class FavoriteController
 
     public function getFavorite()
     {
-          if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
-                $data = json_decode(file_get_contents("php://input"), true);
-               $email = $data['email'];
                 $result = $this->Favorite->loadFavorite( $email);
                 $this->sendResponse(200, $result);
-          }
-          else{
-               $this->sendResponse(404, ["message" => "Error de formato JSON"]);
-          }
-      
     }
 
     private function sendResponse($statusCode, $data)
