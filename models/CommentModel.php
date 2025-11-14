@@ -47,10 +47,7 @@ class Comentario
             $comments =  $stmt->fetchAll(PDO::FETCH_ASSOC);;
 
                 return $comments;
-            } else {
 
-                return [];
-            }
         } catch (Error $error) {
             return false;
         }
