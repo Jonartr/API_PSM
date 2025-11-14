@@ -34,9 +34,9 @@ class CommentController
             $result = $this->Comment->insertarComentario($commentData);
 
             if ($result) {
-                $this->sendResponse(201, ["message" => "Comentario agregado", "result" => $result]);
+                $this->sendResponse(201, ["message" => "Comentario agregado", "data" => $result]);
             } else {
-                $this->sendResponse(404, ["message" => "Error comentario",, "result" => $result]);
+                $this->sendResponse(404, ["message" => "Error comentario", "data" => $commentData]);
             }
 
         } else {
