@@ -34,7 +34,7 @@ class Favorito
         }
     }
 
-    public function loadFavorite($email)
+    public function loadFavorite()
     {
 
         try {
