@@ -34,8 +34,13 @@ class FavoriteController
 
     public function getFavorite()
     {
-        $result = $this->Favorite->loadFavorite();
-        $this->sendResponse(200, $result);
+          if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+                $data = json_decode(file_get_contents("php://input"), true);
+               $email = $data['email'];
+                $result = $this->Favorite->loadFavorite( $email);
+                $this->sendResponse(200, $result);
+          }
+      
     }
 
     private function sendResponse($statusCode, $data)
