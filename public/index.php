@@ -65,7 +65,7 @@ $routes = [
     ],
 
     'favorites/get' => [
-        'POST' => 'FavoriteController@getFavorite'
+        'GET' => 'FavoriteController@getFavorite'
     ]
 ];
 
