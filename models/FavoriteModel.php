@@ -23,8 +23,8 @@ class Favorito
             $query = "INSERT INTO favorites (id_story, email) VALUES (:id,:email);";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param(":id", $id);
-            $stmt->bind_param(":email", $email);
+            $stmt->bindParam(":id", $id);
+            $stmt->bindParam(":email", $email);
             $stmt->execute();
 
             return true;
@@ -34,7 +34,7 @@ class Favorito
         }
     }
 
-    public function loadFavorite()
+    public function loadFavorite($email)
     {
 
 
@@ -54,24 +54,14 @@ class Favorito
                   ORDER BY publicacion.creation_date DESC";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param(":id", $query);
+            $stmt->bindParam(":email", $email);
             $stmt->execute();
 
-            $result = $stmt->get_result();
 
-            $favorites = [];
+            $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $favorites[] = $row;
-                }
-
-
-                return $favorites;
-            } else {
-
-                return [];
-            }
+             return $favorites;
+   
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
             return $data;
