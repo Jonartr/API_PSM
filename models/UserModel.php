@@ -82,14 +82,16 @@ class Usuarios
             $stmt->bindParam(":alias", $alias);
             $stmt->bindParam(":image", $image);
             $stmt->bindParam(":email", $email);
+            
+            $stmt->execute();
+                
+         	$updateQuery = "SELECT email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email";
+            $stmt = $this->conn->prepare($updateQuery);
+            $stmt->bindParam(":email", $email);
+            $stmt->execute();
 
-            if ($stmt->execute()) {
-                return [
-                    "success" => true,
-                    "rows_affected" => $stmt->rowCount()
-                ];
-            }
-            return ["success" => false, "error" => "No se pudo actualizar usuario"];
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $user;
         } catch (PDOException $error) {
             $data = ["error" => $error->getMessage()];
             return $data;
