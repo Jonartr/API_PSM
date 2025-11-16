@@ -40,7 +40,7 @@ class Comentario
 
     public function loadComments(){
         try {
-            $query = "SELECT id_comment, id_story, email, text_comment, date_comment FROM comments_story WHERE activee = 1;";
+            $query = "SELECT id_comment, id_story, email, text_comment, date_comment FROM comments_story WHERE active = 1;";
 
             $stmt = $this->db->prepare($query);
             $stmt->execute();
