@@ -44,8 +44,6 @@ class Like
             $stmt = $this->db->prepare($query);
             $stmt->execute();
 
-            $result = $stmt->get_result();
-
             $like = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return  $like;
