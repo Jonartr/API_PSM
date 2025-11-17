@@ -43,10 +43,6 @@ $routes = [
         'POST' => 'UserController@updateProfile',
     ],
 
-    'user/password' => [
-        'PUT' => 'UserController@actualizarContrasena'
-    ],
-
     'post/update' => ['POST' => 'PostController@update'],
 
     'post' => [
@@ -54,8 +50,7 @@ $routes = [
         'GET' => 'PostController@getpost'
     ],
 
-    
-
+ 
     'likes/toggle' => ['POST' => 'LikeController@toggle'],
     'likes/check' => ['GET' => 'LikeController@checkLike'],
 

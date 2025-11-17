@@ -19,8 +19,9 @@ class UserController
             $lastname = $_POST['lastname'];
             $email = $_POST['email'];
             $alias = $_POST['alias'];
+            $password = $_POST['password'];
 
-            if (!isset($name) || !isset($lastname) || !isset($email) || !isset($alias)) {
+            if (!isset($name) || !isset($lastname) || !isset($email) || !isset($alias)|| !isset($password)) {
                 $this->sendResponse(404, ["message" => "Datos incompletos"]);
             }
 
@@ -35,6 +36,7 @@ class UserController
                         'name' =>  $name,
                         'lastname' => $lastname,
                         'alias' => $alias,
+                        'password' => $password,
                         'image' =>  $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null
                     ];
 

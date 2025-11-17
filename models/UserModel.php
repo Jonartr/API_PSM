@@ -72,9 +72,10 @@ class Usuarios
             $lastname = $datos["lastname"] ?? '';
             $alias = $datos["alias"] ?? '';
             $image = $datos["image"] ?? '';
+             $password = $datos["password"] ?? '';
 
             $query = "UPDATE usuarios SET nam_e = :name, last_name = :lastname, alias = :alias, image_avatar = :image 
-                      WHERE email = :email";
+                     pass_word = :password WHERE email = :email";
             $stmt = $this->conn->prepare($query);
 
             $stmt->bindParam(":name", $name);
@@ -82,6 +83,7 @@ class Usuarios
             $stmt->bindParam(":alias", $alias);
             $stmt->bindParam(":image", $image);
             $stmt->bindParam(":email", $email);
+            $stmt->bindParam(":password", $password);
             
             $stmt->execute();
                 
@@ -120,7 +122,6 @@ class Usuarios
         }
     }
 
-    // Método adicional para obtener usuario por email
     public function obtenerUsuarioPorEmail($email)
     {
         try {
@@ -136,7 +137,6 @@ class Usuarios
         }
     }
 
-    // Método para verificar si el email ya existe
     public function emailExiste($email)
     {
         try {
