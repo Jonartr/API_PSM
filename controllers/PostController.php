@@ -81,7 +81,7 @@ class PostController
             $id = $_POST['idstory'];
 
 
-            if (!isset($title) || !isset($description) || !isset($email)) {
+            if (!isset($title) || !isset($description)) {
                 $this->sendResponse(404, ["message" => "Datos incompletos"]);
             }
 
