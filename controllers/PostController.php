@@ -109,7 +109,7 @@ class PostController
                             "idphoto" => $result
                         ];
 
-                        $result_2 =  $this->postModel->loadImage($photodata);
+                        $result_2 =  $this->postModel->updateImage($photodata);
 
                         if ($result_2) {
                             $this->sendResponse(201, ["message" => "Publicacion actualizada"]);
