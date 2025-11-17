@@ -47,12 +47,14 @@ $routes = [
         'PUT' => 'UserController@actualizarContrasena'
     ],
 
+    'post/update' => ['POST' => 'PostController@update'],
+
     'post' => [
         'POST' => 'PostController@create',
         'GET' => 'PostController@getpost'
     ],
 
-    'post/update' => ['POST' => 'PostController@update'],
+    
 
     'likes/toggle' => ['POST' => 'LikeController@toggle'],
     'likes/check' => ['GET' => 'LikeController@checkLike'],

@@ -106,7 +106,7 @@ class PostController
                             "image" => $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null,
                             "idstory" => $id,
                             'email' => $email,
-                            "idphoto" => $result
+                            "idphoto" => $id 
                         ];
 
                         $result_2 =  $this->postModel->updateImage($photodata);
