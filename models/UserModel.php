@@ -74,7 +74,7 @@ class Usuarios
             $image = $datos["image"] ?? '';
              $password = $datos["password"] ?? '';
 
-            $query = "UPDATE usuarios SET nam_e = :name, last_name = :lastname, alias = :alias, image_avatar = :image 
+            $query = "UPDATE usuarios SET nam_e = :name, last_name = :lastname, alias = :alias, image_avatar = :image,
                      pass_word = :password WHERE email = :email";
             $stmt = $this->conn->prepare($query);
 
