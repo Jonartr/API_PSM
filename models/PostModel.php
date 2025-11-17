@@ -27,7 +27,31 @@ class Publicaciones
             $stmt->bindParam(":email", $email);
             $stmt->execute();
 
-           $postId = $this->conn->lastInsertId();
+            $postId = $this->conn->lastInsertId();
+
+            return $postId;
+        } catch (Error $error) {
+            $data = ["error" => $error->getMessage()];
+            return  $data;
+        }
+    }
+
+    public function actualizarPost($post)
+    {
+        $title = $post['title'];
+        $descr = $post['description'];
+        $email = $post['email'];
+        $id = $post['idstory'];
+
+        try {
+            $query = "UPDATE publicacion set title_story = :title, descr_story = :description WHERE id_story = :id ";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":title", $title);
+            $stmt->bindParam(":description", $descr);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            $postId = $this->conn->lastInsertId();
 
             return $postId;
         } catch (Error $error) {
@@ -53,7 +77,7 @@ class Publicaciones
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
 
-             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);;
+            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);;
 
             return $posts;
         } catch (Error $error) {
@@ -75,6 +99,25 @@ class Publicaciones
             $stmt->bindParam(":image", $image);
             $stmt->bindParam(":idphoto", $idphoto);
             $stmt->bindParam(":email", $email);
+            $stmt->execute();
+            return true;
+        } catch (Error $error) {
+            $data = ["error" => $error->getMessage()];
+            return  $data;
+        }
+    }
+
+    public function updateImage($data)
+    {
+        $image = $data['image'];
+        $idphoto = $data['idphoto'];
+
+        
+        try {
+            $query = "UPDATE image_story set file_path = :image WHERE id_story = :idphoto";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":image", $image);
+            $stmt->bindParam(":idphoto", $idphoto);
             $stmt->execute();
             return true;
         } catch (Error $error) {

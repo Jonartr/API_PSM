@@ -37,7 +37,7 @@ require_once(__DIR__ . '/../controllers/FavoriteController.php');
 $routes = [
     'auth/login' => ['POST' => 'AuthController@login'],
     'auth/register' => ['POST' => 'AuthController@register'],
- 
+
     'user/profile' => [
         'GET' => 'UserController@getProfile',
         'POST' => 'UserController@updateProfile',
@@ -46,11 +46,13 @@ $routes = [
     'user/password' => [
         'PUT' => 'UserController@actualizarContrasena'
     ],
-    
+
     'post' => [
         'POST' => 'PostController@create',
         'GET' => 'PostController@getpost'
     ],
+
+    'post/update' => ['POST' => 'PostController@update'],
 
     'likes/toggle' => ['POST' => 'LikeController@toggle'],
     'likes/check' => ['GET' => 'LikeController@checkLike'],
@@ -94,4 +96,3 @@ if (!$routeFound) {
         "available_routes" => array_keys($routes)
     ]);
 }
-?>

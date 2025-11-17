@@ -36,7 +36,7 @@ class PostController
 
             $result = $this->postModel->nuevoPost($data);
             $photodata = null;
-              $imagenPath = null;
+            $imagenPath = null;
             if ($result != null) {
 
                 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -57,14 +57,73 @@ class PostController
                             $this->sendResponse(404, ["message" => "Error al crear publicacion"]);
                         }
                     }
-                }
-                else{
-                     $this->sendResponse(404, ["message" => "No se encontro imagen"]);
+                } else {
+                    $this->sendResponse(404, ["message" => "No se encontro imagen"]);
                 }
 
                 $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result, "photodata:" => $photodata, "path" =>  $imagenPath]);
             } else {
                 $this->sendResponse(401, ["message" => "Error al crear publicacion"]);
+            }
+        }
+    }
+
+    public function update()
+    {
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+
+        if (strpos($contentType, 'multipart/form-data') !== false) {
+
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+            $email = $_POST['email'];
+            $id = $_POST['idstory'];
+
+
+            if (!isset($title) || !isset($description) || !isset($email)) {
+                $this->sendResponse(404, ["message" => "Datos incompletos"]);
+            }
+
+            $data = [
+                'title' => $title,
+                'description' => $description,
+                'email' => $email,
+                'idstory' => $id
+
+            ];
+
+            $result = $this->postModel->actualizarPost($data);
+            $photodata = null;
+            $imagenPath = null;
+            if ($result != null) {
+
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+
+                    $imagenPath = $this->saveImagePost($_FILES['imagen'], $email);
+                    if ($imagenPath != null) {
+                        $photodata = [
+                            "image" => $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null,
+                            "idstory" => $id,
+                            'email' => $email,
+                            "idphoto" => $result
+                        ];
+
+                        $result_2 =  $this->postModel->loadImage($photodata);
+
+                        if ($result_2) {
+                            $this->sendResponse(201, ["message" => "Publicacion actualizada"]);
+                        } else {
+                            $this->sendResponse(404, ["message" => "Error al actualizar publicacion"]);
+                        }
+                    }
+                } else {
+                    $this->sendResponse(404, ["message" => "No se encontro imagen"]);
+                }
+
+                $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result, "photodata:" => $photodata, "path" =>  $imagenPath]);
+            } else {
+                $this->sendResponse(401, ["message" => "Error al actualizar publicacion"]);
             }
         }
     }
@@ -92,10 +151,10 @@ class PostController
         }
     }
 
-    public function getpost(){
-         $result = $this->postModel->loadPost();
-           $this->sendResponse(200, $result);
-
+    public function getpost()
+    {
+        $result = $this->postModel->loadPost();
+        $this->sendResponse(200, $result);
     }
 
 
