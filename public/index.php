@@ -39,7 +39,6 @@ $routes = [
     'auth/register' => ['POST' => 'AuthController@register'],
 
     'user/profile' => [
-        'GET' => 'UserController@getProfile',
         'POST' => 'UserController@updateProfile',
     ],
 
