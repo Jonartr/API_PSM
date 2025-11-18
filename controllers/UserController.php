@@ -59,19 +59,6 @@ class UserController
         }
     }
 
-    public function actualizarContrasena()
-    {
-        if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
-            $data = json_decode(file_get_contents("php://input"), true);
-
-            $result = $this->userModel->actualizarPassword($data['email'], $data['password']);
-
-
-            $this->sendResponse(201, ["message" => "Informacion actualizada"]);
-        } else {
-            $this->sendResponse(404, ["message" => "Error de JSON"]);
-        }
-    }
 
     public function uploadImage($image, $alias)
     {
