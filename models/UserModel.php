@@ -100,52 +100,16 @@ class Usuarios
         }
     }
 
-    public function actualizarPassword($email, $password)
+
+    public function emailExiste($email)
     {
         try {
-            $query = "UPDATE usuarios SET pass_word = :password WHERE email = :email";
-            $stmt = $this->conn->prepare($query);
-
-            $stmt->bindParam(":password", $password);
-            $stmt->bindParam(":email", $email);
-
-            if ($stmt->execute()) {
-                return [
-                    "success" => true,
-                    "rows_affected" => $stmt->rowCount()
-                ];
-            }
-            return ["success" => false, "error" => "No se pudo actualizar contraseña"];
-        } catch (PDOException $error) {
-            $data = ["error" => $error->getMessage()];
-            return $data;
-        }
-    }
-
-    public function obtenerUsuarioPorEmail($email)
-    {
-        try {
-            $query = "SELECT id, email, nam_e, last_name, alias, image_avatar FROM usuarios WHERE email = :email";
+            $query = "SELECT email FROM usuarios WHERE email = :email";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(":email", $email);
             $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $error) {
-            $data = ["error" => $error->getMessage()];
-            return $data;
-        }
-    }
-
-    public function emailExiste($email)
-    {
-        try {
-            $query = "SELECT id FROM usuarios WHERE email = :email";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(":email", $email);
-            $stmt->execute();
-
-            return $stmt->fetch() !== false;
         } catch (PDOException $error) {
             $data = ["error" => $error->getMessage()];
             return  $data;

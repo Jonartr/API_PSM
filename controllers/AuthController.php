@@ -26,7 +26,7 @@ class AuthController
             if ($loginuser) {
                 $this->sendResponse(201, $loginuser);
             } else {
-                $this->sendResponse(404, ["message" => "Datos incorrectos","data" => $data, "login" =>$loginuser]);
+                $this->sendResponse(404, ["message" => "Datos incorrectos", "data" => $data, "login" => $loginuser]);
             }
         }
     }
@@ -45,43 +45,50 @@ class AuthController
 
             if (!isset($name) || !isset($lastname) || !isset($email) || !isset($alias) || !isset($password)) {
                 $this->sendResponse(404, ["message" => "Datos incompletos"]);
-            }
-
-            $imagenPath = null;
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-
-                $imagenPath = $this->uploadImage($_FILES['imagen'],$alias);
-
-                if ($imagenPath != null) {
-                    $userData = [
-                        'email' =>  $email,
-                        'password' =>  $password,
-                        'name' =>  $name,
-                        'lastname' => $lastname,
-                        'alias' => $alias,
-                        'image' =>  $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null
-                    ];
-
-
-                    $userRegister = $this->userModel->nuevoUsuario($userData);
-
-                    if ($userRegister) {
-                        $this->sendResponse(201, ["message" => "Registro de usuario correcto", "data" =>  $userRegister]);
-                    } else {
-                        $this->sendResponse(404, ["message" => "Error al registrar usuario"]);
-                    }
-                } else {
-                    $this->sendResponse(404, ["message" => "Error al cargar imagen " . $imagenPath ]);
-                }
             } else {
-                $this->sendResponse(404, ["message" => "No hay imagen cargada"]);
+
+                $exist = $this->userModel->emailExiste($email);
+
+                if ($exist['email'] == $email) {
+                       $this->sendResponse(404, ["message" => "Correo ya existente"]);
+                } else {
+                    $imagenPath = null;
+                    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+
+                        $imagenPath = $this->uploadImage($_FILES['imagen'], $alias);
+
+                        if ($imagenPath != null) {
+                            $userData = [
+                                'email' =>  $email,
+                                'password' =>  $password,
+                                'name' =>  $name,
+                                'lastname' => $lastname,
+                                'alias' => $alias,
+                                'image' =>  $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null
+                            ];
+
+
+                            $userRegister = $this->userModel->nuevoUsuario($userData);
+
+                            if ($userRegister) {
+                                $this->sendResponse(201, ["message" => "Registro de usuario correcto", "data" =>  $userRegister]);
+                            } else {
+                                $this->sendResponse(404, ["message" => "Error al registrar usuario"]);
+                            }
+                        } else {
+                            $this->sendResponse(404, ["message" => "Error al cargar imagen " . $imagenPath]);
+                        }
+                    } else {
+                        $this->sendResponse(404, ["message" => "No hay imagen cargada"]);
+                    }
+                }
             }
         } else {
             $this->sendResponse(404, ["message" => "Formato incorrecto"]);
         }
     }
 
-    public function uploadImage($image,$alias)
+    public function uploadImage($image, $alias)
     {
         $uploadPath = "data/userprofile/images/";
 
