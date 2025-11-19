@@ -42,7 +42,7 @@ class PostController
                             $ruta = $this->saveImagePost($archivoIndividual, "Jona");
                             $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                             $photodata = [
-                                "image" => $ruta ? "https://apipsm-production.up.railway.app/ $ruta" : null,
+                                "image" => $ruta ? "https://apipsm-production.up.railway.app/$ruta" : null,
                                 "email" => $email,
                                 "idphoto" => $photoid
                             ];
