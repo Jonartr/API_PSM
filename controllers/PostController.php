@@ -42,7 +42,7 @@ class PostController
                 }
 
                 $contador = count($archivosCargados);
-                $this->sendResponse(200, ["message" => $archivosCargados, "Cantidad" => $contador]);
+                $this->sendResponse(200, ["message" =>  $archivosServidor, "Cantidad" => $contador]);
             }
         }
     }
