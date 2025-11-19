@@ -10,57 +10,67 @@ class PostController
         $this->postModel = new Publicaciones();
     }
 
-    public function cargaImagenes()
+    public function cargaImagenes($data, $photoid)
     {
-          $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
-    if (strpos($contentType, 'multipart/form-data') !== false) {
-        if (isset($_FILES['imagenes'])) {
+        if (strpos($contentType, 'multipart/form-data') !== false) {
+            if (isset($_FILES['imagenes'])) {
 
-            $archivosCargados = [];
-            $archivosServidor = [];
+                $archivosCargados = [];
+                $archivosServidor = [];
 
-   
-            if (is_array($_FILES['imagenes']['name'])) {
-                for ($i = 0; $i < count($_FILES['imagenes']['name']); $i++) {
-                    if (
-                        $_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK &&
-                        !empty($_FILES['imagenes']['name'][$i])
-                    ) {
-                        $archivosCargados[] = $_FILES['imagenes']['name'][$i];
-                        
-  
-                        $archivoIndividual = [
-                            'name' => $_FILES['imagenes']['name'][$i],
-                            'type' => $_FILES['imagenes']['type'][$i],
-                            'tmp_name' => $_FILES['imagenes']['tmp_name'][$i],
-                            'error' => $_FILES['imagenes']['error'][$i],
-                            'size' => $_FILES['imagenes']['size'][$i]
-                        ];
-                        
-                        $ruta = $this->saveImagePost($archivoIndividual, "Jona");
-                        $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
+
+                if (is_array($_FILES['imagenes']['name'])) {
+                    for ($i = 0; $i < count($_FILES['imagenes']['name']); $i++) {
+                        if (
+                            $_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK &&
+                            !empty($_FILES['imagenes']['name'][$i])
+                        ) {
+                            $archivosCargados[] = $_FILES['imagenes']['name'][$i];
+
+
+                            $archivoIndividual = [
+                                'name' => $_FILES['imagenes']['name'][$i],
+                                'type' => $_FILES['imagenes']['type'][$i],
+                                'tmp_name' => $_FILES['imagenes']['tmp_name'][$i],
+                                'error' => $_FILES['imagenes']['error'][$i],
+                                'size' => $_FILES['imagenes']['size'][$i]
+                            ];
+
+                            $email = $data['email'];
+                            $ruta = $this->saveImagePost($archivoIndividual, "Jona");
+                            $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
+                            $photodata = [
+                                "image" => $ruta ? "https://apipsm-production.up.railway.app/ $ruta" : null,
+                                "email" => $email,
+                                "idphoto" => $photoid
+                            ];
+
+                            $result_2 =  $this->postModel->loadImage($photodata);
+
+                            if ($result_2) {
+                                $this->sendResponse(201, ["message" => "Publicacion creada"]);
+                            } else {
+                                $this->sendResponse(404, ["message" => "Error al crear publicacion"]);
+                            }
+                        }
                     }
+                } else if (
+                    $_FILES['imagenes']['error'] === UPLOAD_ERR_OK &&
+                    !empty($_FILES['imagenes']['name'])
+                ) {
+                    $archivosCargados[] = $_FILES['imagenes']['name'];
+                    $ruta = $this->saveImagePost($_FILES['imagenes'], "Jona");
+                    $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                 }
-            }
 
-            else if (
-                $_FILES['imagenes']['error'] === UPLOAD_ERR_OK &&
-                !empty($_FILES['imagenes']['name'])
-            ) {
-                $archivosCargados[] = $_FILES['imagenes']['name'];
-                $ruta = $this->saveImagePost($_FILES['imagenes'], "Jona");
-                $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
+               // $contador = count($archivosCargados);
+              //  $this->sendResponse(201, ["message" => "Carga de imagenes correcta"]);
+            } else {
+                $this->sendResponse(400, ["message" => "Error al cargar imagenes"]);
             }
-
-            $contador = count($archivosCargados);
-            $this->sendResponse(201, $archivosServidor);
         }
-        else{
-               $this->sendResponse(400, ["message" => "Error al cargar imagenes"]);
-        }
-      
-    }
     }
 
     public function create()
@@ -88,33 +98,17 @@ class PostController
             ];
 
             $result = $this->postModel->nuevoPost($data);
-            $photodata = null;
-            $imagenPath = null;
+
             if ($result != null) {
 
                 if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
-
-                    $imagenPath = $this->saveImagePost($_FILES['imagen'], $email);
-                    if ($imagenPath != null) {
-                        $photodata = [
-                            "image" => $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null,
-                            "email" => $email,
-                            "idphoto" => $result
-                        ];
-
-                        $result_2 =  $this->postModel->loadImage($photodata);
-
-                        if ($result_2) {
-                            $this->sendResponse(201, ["message" => "Publicacion creada"]);
-                        } else {
-                            $this->sendResponse(404, ["message" => "Error al crear publicacion"]);
-                        }
-                    }
+                    $this->cargaImagenes($data, $result);
                 } else {
                     $this->sendResponse(404, ["message" => "No se encontro imagen"]);
                 }
 
-                $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result, "photodata:" => $photodata, "path" =>  $imagenPath]);
+                $this->sendResponse(201, ["message" => "Publicacion Correcta"]);
+
             } else {
                 $this->sendResponse(401, ["message" => "Error al crear publicacion"]);
             }
@@ -218,3 +212,21 @@ class PostController
         echo json_encode($data);
     }
 }
+
+
+/*  $imagenPath = $this->saveImagePost($_FILES['imagen'], $email);
+                    if ($imagenPath != null) {
+                        $photodata = [
+                            "image" => $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null,
+                            "email" => $email,
+                            "idphoto" => $result
+                        ];
+
+                        $result_2 =  $this->postModel->loadImage($photodata);
+
+                        if ($result_2) {
+                            $this->sendResponse(201, ["message" => "Publicacion creada"]);
+                        } else {
+                            $this->sendResponse(404, ["message" => "Error al crear publicacion"]);
+                        }
+                    } */
