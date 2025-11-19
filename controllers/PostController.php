@@ -175,7 +175,7 @@ class PostController
         }
 
         $fileExtension = pathinfo($image['name'], PATHINFO_EXTENSION);
-        $fileName = $email . '_' . time() . '.' . $fileExtension;
+        $fileName = $email . '_' . uniqid() . '.' . $fileExtension;
         $filePath = $uploadPath . $fileName;
 
         if (move_uploaded_file($image['tmp_name'], $filePath)) {
