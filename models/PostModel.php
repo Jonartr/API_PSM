@@ -64,18 +64,19 @@ class Publicaciones
     {
         try {
             $query = "SELECT 
-                    publicacion.id_story, 
-                    publicacion.title_story, 
-                    publicacion.descr_story, 
-                    publicacion.creation_date,
-                    publicacion.email, 
-                    image_story.file_path ,
-                    usuarios.alias,
-                    usuarios.image_avatar
-                  FROM publicacion 
-                  INNER JOIN image_story ON publicacion.id_story = image_story.id_story
-                  INNER JOIN usuarios ON usuarios.email =  publicacion.email
-                  ORDER BY publicacion.creation_date DESC;";
+                    p.id_story,
+                    p.title_story,
+                    p.descr_story,
+                    p.creation_date,
+                    p.email,
+                    u.alias,
+                    u.image_avatar,
+                    GROUP_CONCAT(CONCAT(i.file_path)) as file_path
+                 FROM publicacion p 
+                 LEFT JOIN image_story i ON p.id_story = i.id_story 
+                 LEFT JOIN usuarios u ON p.email = u.email
+                 GROUP BY p.id_story 
+                 ORDER BY p.creation_date DESC;";
 
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
