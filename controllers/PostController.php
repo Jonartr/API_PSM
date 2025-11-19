@@ -16,7 +16,7 @@ class PostController
 
 
         if (strpos($contentType, 'multipart/form-data') !== false) {
-            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK && is_array($_FILES['imagenes']['name'])) {
+            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
                 $rearranged = [];
                 $count = count($_FILES['imagenes']['name']);
 
