@@ -88,7 +88,7 @@ class Publicaciones
                 $post['file_path'] = explode(',', $post['file_path']);
                 // Agregar URL base si es necesario
                 $post['file_path'] = array_map(function($path) {
-                    return "https://apipsm-production.up.railway.app/$path";
+                    return "$path";
                 }, $post['file_path']);
             } else {
                 $post['file_path'] = [];
