@@ -77,7 +77,19 @@ class Publicaciones
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
 
-            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);;
+            $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($posts as &$post) {
+            if ($post['file_paths']) {
+                $post['file_paths'] = explode(',', $post['file_paths']);
+                // Agregar URL base si es necesario
+                $post['file_paths'] = array_map(function($path) {
+                    return "https://apipsm-production.up.railway.app/$path";
+                }, $post['file_paths']);
+            } else {
+                $post['file_paths'] = [];
+            }
+        }
 
             return $posts;
         } catch (Error $error) {
