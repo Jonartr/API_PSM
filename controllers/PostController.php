@@ -10,31 +10,17 @@ class PostController
         $this->postModel = new Publicaciones();
     }
 
-    public function prueba_imagenes()
-    {
-        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    public function prueba_imagenes(){
+          $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
 
         if (strpos($contentType, 'multipart/form-data') !== false) {
-            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
-                $rearranged = [];
-                $count = count($_FILES['imagenes']);
+                  if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
+                    foreach($_FILES['imagenes'] as $Imagen)
+                     $this->sendResponse(201, ["message" => $Imagen]);
+                  }
 
-                for ($i = 0; $i < $count; $i++) {
-                    if ($_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK) {
-                        $rearranged[] = [
-                            'name' => $_FILES['imagenes']['name'][$i],
-                            'type' => $_FILES['imagenes']['type'][$i],
-                            'tmp_name' =>$_FILES['imagenes']['tmp_name'][$i],
-                            'error' => $_FILES['imagenes']['error'][$i],
-                            'size' => $_FILES['imagenes']['size'][$i]
-                        ];
-                       
-                    }
-                }
 
-                  $this->sendResponse(201, ["message" => $rearranged]);
-            }
         }
     }
 
@@ -134,7 +120,7 @@ class PostController
                             "image" => $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null,
                             "idstory" => $id,
                             'email' => $email,
-                            "idphoto" => $id
+                            "idphoto" => $id 
                         ];
 
                         $result_2 =  $this->postModel->updateImage($photodata);
