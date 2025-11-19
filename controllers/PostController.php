@@ -10,6 +10,19 @@ class PostController
         $this->postModel = new Publicaciones();
     }
 
+    public function prueba_imagenes(){
+          $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+
+        if (strpos($contentType, 'multipart/form-data') !== false) {
+                  if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
+                     $this->sendResponse(201, ["message" => $_FILES['imagenes']]);
+                  }
+
+
+        }
+    }
+
     public function create()
     {
 
@@ -39,7 +52,7 @@ class PostController
             $imagenPath = null;
             if ($result != null) {
 
-                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
 
                     $imagenPath = $this->saveImagePost($_FILES['imagen'], $email);
                     if ($imagenPath != null) {

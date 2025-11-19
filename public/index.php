@@ -45,7 +45,7 @@ $routes = [
     'post/update' => ['POST' => 'PostController@update'],
 
     'post' => [
-        'POST' => 'PostController@create',
+        'POST' => 'PostController@prueba_imagenes',
         'GET' => 'PostController@getpost'
     ],
 
