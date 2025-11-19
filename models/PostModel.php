@@ -65,29 +65,32 @@ class Publicaciones
         try {
             $query = "SELECT 
                     publicacion.id_story, 
-                    title_story, 
-                    descr_story, 
-                    creation_date,
+                    publicacion.title_story, 
+                    publicacion.descr_story, 
+                    publicacion.creation_date,
                     publicacion.email, 
-                    file_path 
+                    image_story.file_path ,
+                    usuarios.alias,
+                    usuarios.image_avatar
                   FROM publicacion 
                   INNER JOIN image_story ON publicacion.id_story = image_story.id_story
-                  ORDER BY publicacion.creation_date DESC";
+                  INNER JOIN usuarios ON usuarios.email =  publicacion.email
+                  ORDER BY publicacion.creation_date DESC;";
 
             $stmt = $this->conn->prepare($query);
             $stmt->execute();
 
             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             foreach ($posts as &$post) {
-            if ($post['file_paths']) {
-                $post['file_paths'] = explode(',', $post['file_paths']);
+            if ($post['file_path']) {
+                $post['file_path'] = explode(',', $post['file_path']);
                 // Agregar URL base si es necesario
-                $post['file_paths'] = array_map(function($path) {
+                $post['file_path'] = array_map(function($path) {
                     return "https://apipsm-production.up.railway.app/$path";
-                }, $post['file_paths']);
+                }, $post['file_path']);
             } else {
-                $post['file_paths'] = [];
+                $post['file_path'] = [];
             }
         }
 
