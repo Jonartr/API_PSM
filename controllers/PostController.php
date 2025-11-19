@@ -18,7 +18,7 @@ class PostController
         if (strpos($contentType, 'multipart/form-data') !== false) {
             if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
                 foreach ($_FILES['imagenes'] as $Imagen) {
-                  $imageName =  $this->saveImagePost($Imagen, "Hola");
+                  $imageName =  $this->saveImagePost($_FILES['imagenes'], "Hola");
                  $imageFile =  "https://apipsm-production.up.railway.app/$imageName";
                      $this->sendResponse(201, ["message" => $imageFile]);
                 }
