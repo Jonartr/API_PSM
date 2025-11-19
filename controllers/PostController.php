@@ -15,31 +15,28 @@ class PostController
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
         if (strpos($contentType, 'multipart/form-data') !== false) {
-            if (isset($_FILES['imagenes'])) {
+            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'][0] !== UPLOAD_ERR_NO_FILE) {
 
+                // Para múltiples archivos, necesitas procesar la estructura especial de $_FILES
                 $archivosCargados = [];
 
-            
+                // Verificar si es un solo archivo o múltiples archivos
                 if (is_array($_FILES['imagenes']['name'])) {
-                    for ($i = 0; $i < count($_FILES['imagenes']['name']); $i++) {
-                        if (
-                            $_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK &&
-                            !empty($_FILES['imagenes']['name'][$i])
-                        ) {
-                            $archivosCargados[] = $_FILES['imagenes']['name'][$i];
+                    // Múltiples archivos
+                    foreach ($_FILES['imagenes']['name'] as $index => $name) {
+                        if ($_FILES['imagenes']['error'][$index] === UPLOAD_ERR_OK && !empty($name)) {
+                            $archivosCargados[] = $name;
                         }
                     }
-                }
-               
-                else if (
-                    $_FILES['imagenes']['error'] === UPLOAD_ERR_OK &&
-                    !empty($_FILES['imagenes']['name'])
-                ) {
-                    $archivosCargados[] = $_FILES['imagenes']['name'];
+                } else {
+                    // Un solo archivo
+                    if ($_FILES['imagenes']['error'] === UPLOAD_ERR_OK && !empty($_FILES['imagenes']['name'])) {
+                        $archivosCargados[] = $_FILES['imagenes']['name'];
+                    }
                 }
 
                 $contador = count($archivosCargados);
-                $this->sendResponse(200, ["message" => $_FILES['imagenes']]);
+                $this->sendResponse(200, ["message" => $archivosCargados, "Cantidad" => $contador]);
             }
         }
     }
