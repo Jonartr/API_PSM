@@ -29,9 +29,11 @@ class PostController
                             'error' => $_FILES['imagenes']['error'][$i],
                             'size' => $_FILES['imagenes']['size'][$i]
                         ];
-                         $this->sendResponse(201, ["message" => $rearranged]);
+                       
                     }
                 }
+
+                  $this->sendResponse(201, ["message" => $rearranged]);
             }
         }
     }
