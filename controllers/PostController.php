@@ -10,17 +10,19 @@ class PostController
         $this->postModel = new Publicaciones();
     }
 
-    public function prueba_imagenes(){
-          $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+    public function prueba_imagenes()
+    {
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
 
         if (strpos($contentType, 'multipart/form-data') !== false) {
-                  if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
-                    foreach($_FILES['imagenes'] as $Imagen)
-                     $this->sendResponse(201, ["message" => $Imagen]);
-                  }
-
-
+            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
+                foreach ($_FILES['imagenes'] as $Imagen) {
+                  $imageName =  $this->saveImagePost($Imagen, "Hola");
+                 $imageFile =  "https://apipsm-production.up.railway.app/$imageName";
+                     $this->sendResponse(201, ["message" => $imageFile]);
+                }
+            }
         }
     }
 
@@ -120,7 +122,7 @@ class PostController
                             "image" => $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null,
                             "idstory" => $id,
                             'email' => $email,
-                            "idphoto" => $id 
+                            "idphoto" => $id
                         ];
 
                         $result_2 =  $this->postModel->updateImage($photodata);
