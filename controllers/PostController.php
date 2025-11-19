@@ -54,7 +54,7 @@ class PostController
             }
 
             $contador = count($archivosCargados);
-            $this->sendResponse(200, ["message" => $archivosServidor, "Cantidad" => $contador]);
+            $this->sendResponse(200, $archivosServidor);
         }
          $this->sendResponse(400, ["message" => "Error al cargar imagenesC"]);
     }
