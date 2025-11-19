@@ -12,39 +12,51 @@ class PostController
 
     public function prueba_imagenes()
     {
-        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+          $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
-        if (strpos($contentType, 'multipart/form-data') !== false) {
-            if (isset($_FILES['imagenes'])) {
+    if (strpos($contentType, 'multipart/form-data') !== false) {
+        if (isset($_FILES['imagenes'])) {
 
-                $archivosCargados = [];
-                $archivosServidor = [];
+            $archivosCargados = [];
+            $archivosServidor = [];
 
-                // Si es array (múltiples archivos)
-                if (is_array($_FILES['imagenes']['name'])) {
-                    for ($i = 0; $i < count($_FILES['imagenes']['name']); $i++) {
-                        if (
-                            $_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK &&
-                            !empty($_FILES['imagenes']['name'][$i])
-                        ) {
-                            $archivosCargados[] = $_FILES['imagenes']['name'][$i];
-                            $ruta = $this->saveImagePost($_FILES['imagenes'][$i], "Jona");
-                            $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
-                        }
+            // Si es array (múltiples archivos)
+            if (is_array($_FILES['imagenes']['name'])) {
+                for ($i = 0; $i < count($_FILES['imagenes']['name']); $i++) {
+                    if (
+                        $_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK &&
+                        !empty($_FILES['imagenes']['name'][$i])
+                    ) {
+                        $archivosCargados[] = $_FILES['imagenes']['name'][$i];
+                        
+                        // Crear array individual para cada archivo
+                        $archivoIndividual = [
+                            'name' => $_FILES['imagenes']['name'][$i],
+                            'type' => $_FILES['imagenes']['type'][$i],
+                            'tmp_name' => $_FILES['imagenes']['tmp_name'][$i],
+                            'error' => $_FILES['imagenes']['error'][$i],
+                            'size' => $_FILES['imagenes']['size'][$i]
+                        ];
+                        
+                        $ruta = $this->saveImagePost($archivoIndividual, "Jona");
+                        $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                     }
                 }
-                // Si es string (un solo archivo)
-                else if (
-                    $_FILES['imagenes']['error'] === UPLOAD_ERR_OK &&
-                    !empty($_FILES['imagenes']['name'])
-                ) {
-                    $archivosCargados[] = $_FILES['imagenes']['name'];
-                }
-
-                $contador = count($archivosCargados);
-                $this->sendResponse(200, ["message" =>  $archivosServidor, "Cantidad" => $contador]);
             }
+            // Si es string (un solo archivo)
+            else if (
+                $_FILES['imagenes']['error'] === UPLOAD_ERR_OK &&
+                !empty($_FILES['imagenes']['name'])
+            ) {
+                $archivosCargados[] = $_FILES['imagenes']['name'];
+                $ruta = $this->saveImagePost($_FILES['imagenes'], "Jona");
+                $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
+            }
+
+            $contador = count($archivosCargados);
+            $this->sendResponse(200, ["message" => $archivosServidor, "Cantidad" => $contador]);
         }
+    }
     }
 
     public function create()
