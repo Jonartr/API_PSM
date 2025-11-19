@@ -14,14 +14,32 @@ class PostController
     {
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
-
         if (strpos($contentType, 'multipart/form-data') !== false) {
-            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
-                $archivosCargados = array_filter($_FILES['imagenes']['name']);
+            if (isset($_FILES['imagenes'])) {
+
+                $archivosCargados = [];
+
+            
+                if (is_array($_FILES['imagenes']['name'])) {
+                    for ($i = 0; $i < count($_FILES['imagenes']['name']); $i++) {
+                        if (
+                            $_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK &&
+                            !empty($_FILES['imagenes']['name'][$i])
+                        ) {
+                            $archivosCargados[] = $_FILES['imagenes']['name'][$i];
+                        }
+                    }
+                }
+               
+                else if (
+                    $_FILES['imagenes']['error'] === UPLOAD_ERR_OK &&
+                    !empty($_FILES['imagenes']['name'])
+                ) {
+                    $archivosCargados[] = $_FILES['imagenes']['name'];
+                }
+
                 $contador = count($archivosCargados);
-                 $this->sendResponse(200, ["message" => $archivosCargados, "Cantidad" =>$contador]);
-
-
+                $this->sendResponse(200, ["message" => $archivosCargados, "Cantidad" => $contador]);
             }
         }
     }
