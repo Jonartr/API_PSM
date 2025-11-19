@@ -10,7 +10,7 @@ class PostController
         $this->postModel = new Publicaciones();
     }
 
-    public function prueba_imagenes()
+    public function cargaImagenes()
     {
           $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
@@ -20,7 +20,7 @@ class PostController
             $archivosCargados = [];
             $archivosServidor = [];
 
-            // Si es array (múltiples archivos)
+   
             if (is_array($_FILES['imagenes']['name'])) {
                 for ($i = 0; $i < count($_FILES['imagenes']['name']); $i++) {
                     if (
@@ -29,7 +29,7 @@ class PostController
                     ) {
                         $archivosCargados[] = $_FILES['imagenes']['name'][$i];
                         
-                        // Crear array individual para cada archivo
+  
                         $archivoIndividual = [
                             'name' => $_FILES['imagenes']['name'][$i],
                             'type' => $_FILES['imagenes']['type'][$i],
@@ -43,7 +43,7 @@ class PostController
                     }
                 }
             }
-            // Si es string (un solo archivo)
+
             else if (
                 $_FILES['imagenes']['error'] === UPLOAD_ERR_OK &&
                 !empty($_FILES['imagenes']['name'])

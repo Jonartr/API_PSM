@@ -105,6 +105,7 @@ class Publicaciones
             $data = ["error" => $error->getMessage()];
             return  $data;
         }
+    
     }
 
     public function updateImage($data)
