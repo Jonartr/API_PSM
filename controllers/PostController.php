@@ -16,11 +16,21 @@ class PostController
 
 
         if (strpos($contentType, 'multipart/form-data') !== false) {
-            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
-                foreach ($_FILES['imagenes'] as $Imagen) {
-                  $imageName =  $this->saveImagePost($_FILES['imagenes'], "Hola");
-                 $imageFile =  "https://apipsm-production.up.railway.app/$imageName";
-                     $this->sendResponse(201, ["message" => $imageFile]);
+            if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK && is_array($_FILES['imagenes']['name'])) {
+                $rearranged = [];
+                $count = count($_FILES['imagenes']['name']);
+
+                for ($i = 0; $i < $count; $i++) {
+                    if ($_FILES['imagenes']['error'][$i] === UPLOAD_ERR_OK) {
+                        $rearranged[] = [
+                            'name' => $_FILES['imagenes']['name'][$i],
+                            'type' => $_FILES['imagenes']['type'][$i],
+                            'tmp_name' =>$_FILES['imagenes']['tmp_name'][$i],
+                            'error' => $_FILES['imagenes']['error'][$i],
+                            'size' => $_FILES['imagenes']['size'][$i]
+                        ];
+                         $this->sendResponse(201, ["message" => $rearranged]);
+                    }
                 }
             }
         }
