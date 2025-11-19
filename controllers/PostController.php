@@ -18,6 +18,7 @@ class PostController
             if (isset($_FILES['imagenes'])) {
 
                 $archivosCargados = [];
+                $archivosServidor = [];
 
                 // Si es array (múltiples archivos)
                 if (is_array($_FILES['imagenes']['name'])) {
@@ -27,6 +28,8 @@ class PostController
                             !empty($_FILES['imagenes']['name'][$i])
                         ) {
                             $archivosCargados[] = $_FILES['imagenes']['name'][$i];
+                            $ruta = $this->saveImagePost($_FILES['imagenes'][$i], "Jona");
+                            $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                         }
                     }
                 }
@@ -164,7 +167,7 @@ class PostController
 
     private function saveImagePost($image, $email)
     {
-        $uploadPath = "data/post/ " . $email . "/" . "images/";
+        $uploadPath = "data/post/" . $email . "/" . "images/";
 
 
         if (!is_dir($uploadPath)) {
