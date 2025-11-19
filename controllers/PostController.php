@@ -101,7 +101,7 @@ class PostController
 
             if ($result != null) {
 
-                if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
+                if (isset($_FILES['imagenes'])) {
                     $this->cargaImagenes($data, $result);
                 } else {
                     $this->sendResponse(404, ["message" => "No se encontro imagen"]);
