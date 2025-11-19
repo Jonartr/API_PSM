@@ -16,7 +16,8 @@ class PostController
 
         if (strpos($contentType, 'multipart/form-data') !== false) {
                   if (isset($_FILES['imagenes']) && $_FILES['imagenes']['error'] === UPLOAD_ERR_OK) {
-                     $this->sendResponse(201, ["message" => $_FILES['imagenes']]);
+                    foreach($_FILES['imagenes'] as $Imagen)
+                     $this->sendResponse(201, ["message" => $Imagen]);
                   }
 
 
