@@ -39,7 +39,7 @@ class PostController
                             ];
 
                             $email = $data['email'];
-                            $ruta = $this->saveImagePost($archivoIndividual, "Jona");
+                            $ruta = $this->saveImagePost($archivoIndividual, $email);
                             $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                             $photodata = [
                                 "image" => $ruta ? "https://apipsm-production.up.railway.app/$ruta" : null,
@@ -138,7 +138,7 @@ class PostController
 
             $result = $this->postModel->actualizarPost($data);
 
-            if ($result) {
+            if ($result != null) {
 
                 $this->postModel->deleteImage($id);
                 

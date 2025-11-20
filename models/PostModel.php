@@ -40,7 +40,6 @@ class Publicaciones
     {
         $title = $post['title'];
         $descr = $post['description'];
-        $email = $post['email'];
         $id = $post['idstory'];
 
         try {
