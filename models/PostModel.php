@@ -84,16 +84,16 @@ class Publicaciones
             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($posts as &$post) {
-            if ($post['file_path']) {
-                $post['file_path'] = explode(',', $post['file_path']);
-                // Agregar URL base si es necesario
-                $post['file_path'] = array_map(function($path) {
-                    return "$path";
-                }, $post['file_path']);
-            } else {
-                $post['file_path'] = [];
+                if ($post['file_path']) {
+                    $post['file_path'] = explode(',', $post['file_path']);
+                    // Agregar URL base si es necesario
+                    $post['file_path'] = array_map(function ($path) {
+                        return "$path";
+                    }, $post['file_path']);
+                } else {
+                    $post['file_path'] = [];
+                }
             }
-        }
 
             return $posts;
         } catch (Error $error) {
@@ -121,7 +121,6 @@ class Publicaciones
             $data = ["error" => $error->getMessage()];
             return  $data;
         }
-    
     }
 
     public function updateImage($data)
@@ -129,7 +128,7 @@ class Publicaciones
         $image = $data['image'];
         $idphoto = $data['idphoto'];
 
-        
+
         try {
             $query = "UPDATE image_story set file_path = :image WHERE id_story = :idphoto";
             $stmt = $this->conn->prepare($query);
@@ -143,7 +142,39 @@ class Publicaciones
         }
     }
 
-    public function deletePost($data){
+    public function eliminarPost($id)
+    {
 
+        try {
+            $query = "DELETE FROM favorites WHERE id_story = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            $query2 = "DELETE FROM votes_story WHERE id_story = :id";
+            $stmt = $this->conn->prepare($query2);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            $query3 = "DELETE FROM comments_story WHERE id_story = :id";
+            $stmt = $this->conn->prepare($query3);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            $query4 = "DELETE FROM image_story WHERE id_story = :id";
+            $stmt = $this->conn->prepare($query4);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            $query5 = "DELETE FROM publicacion WHERE id_story = :id";
+            $stmt = $this->conn->prepare($query5);
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+
+            return true;
+        } catch (Error $error) {
+            $data = ["error" => $error->getMessage()];
+            return  $data;
+        }
     }
 }

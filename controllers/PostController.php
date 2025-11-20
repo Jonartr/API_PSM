@@ -65,8 +65,7 @@ class PostController
                     $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                 }
 
-                // $contador = count($archivosCargados);
-                //  $this->sendResponse(201, ["message" => "Carga de imagenes correcta"]);
+
             } else {
                 $this->sendResponse(400, ["message" => "Error al cargar imagenes"]);
             }
@@ -184,7 +183,11 @@ class PostController
 
             $id = $data['idPost'];
 
-            $this->sendResponse(200, ["message" => $id]);
+            $result =  $this->postModel->eliminarPost($id);
+
+            if ($result) {
+                $this->sendResponse(200, ["message" => "Publicacion eliminada"]);
+            }
         } else {
             $this->sendResponse(401, ["message" => "Error en formato"]);
         }
