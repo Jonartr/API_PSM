@@ -64,8 +64,6 @@ class PostController
                     $ruta = $this->saveImagePost($_FILES['imagenes'], "Jona");
                     $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                 }
-
-
             } else {
                 $this->sendResponse(400, ["message" => "Error al cargar imagenes"]);
             }
@@ -139,34 +137,18 @@ class PostController
             ];
 
             $result = $this->postModel->actualizarPost($data);
-            $photodata = null;
-            $imagenPath = null;
-            if ($result != null) {
 
+            if ($result) {
+
+                $this->postModel->deleteImage($id);
+                
                 if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                    $this->cargaImagenes($data, $id);
 
-                    $imagenPath = $this->saveImagePost($_FILES['imagen'], $email);
-                    if ($imagenPath != null) {
-                        $photodata = [
-                            "image" => $imagenPath ? "https://apipsm-production.up.railway.app/$imagenPath" : null,
-                            "idstory" => $id,
-                            'email' => $email,
-                            "idphoto" => $id
-                        ];
-
-                        $result_2 =  $this->postModel->updateImage($photodata);
-
-                        if ($result_2) {
-                            $this->sendResponse(201, ["message" => "Publicacion actualizada"]);
-                        } else {
-                            $this->sendResponse(404, ["message" => "Error al actualizar publicacion"]);
-                        }
-                    }
+                    $this->sendResponse(201, ["message" => "Actualizacion de publicacion correcta"]);
                 } else {
                     $this->sendResponse(404, ["message" => "No se encontro imagen"]);
                 }
-
-                $this->sendResponse(201, ["message" => "Publicacion Correcta", "valor" => $result, "photodata:" => $photodata, "path" =>  $imagenPath]);
             } else {
                 $this->sendResponse(401, ["message" => "Error al actualizar publicacion"]);
             }

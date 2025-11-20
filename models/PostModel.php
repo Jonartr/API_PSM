@@ -142,6 +142,21 @@ class Publicaciones
         }
     }
 
+    public function deleteImage($idphoto)
+    {
+
+        try {
+            $query = "DELETE FROM image_story WHERE id_story = :idphoto";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(":idphoto", $idphoto);
+            $stmt->execute();
+            return true;
+        } catch (Error $error) {
+            $data = ["error" => $error->getMessage()];
+            return  $data;
+        }
+    }
+
     public function eliminarPost($id)
     {
 
