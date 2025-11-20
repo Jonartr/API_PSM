@@ -142,7 +142,7 @@ class PostController
 
                 $this->postModel->deleteImage($id);
                 
-                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                if (isset($_FILES['imagenes'])) {
                     $this->cargaImagenes($data, $id);
 
                     $this->sendResponse(201, ["message" => "Actualizacion de publicacion correcta"]);
