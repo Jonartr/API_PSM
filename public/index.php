@@ -44,12 +44,14 @@ $routes = [
 
     'post/update' => ['POST' => 'PostController@update'],
 
+    'post/delete' => ['POST' => 'PostController@delete'],
+
     'post' => [
         'POST' => 'PostController@create',
         'GET' => 'PostController@getpost'
     ],
 
- 
+
     'likes/toggle' => ['POST' => 'LikeController@toggle'],
     'likes/check' => ['GET' => 'LikeController@checkLike'],
 

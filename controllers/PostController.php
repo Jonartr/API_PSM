@@ -65,8 +65,8 @@ class PostController
                     $archivosServidor[] = "https://apipsm-production.up.railway.app/$ruta";
                 }
 
-               // $contador = count($archivosCargados);
-              //  $this->sendResponse(201, ["message" => "Carga de imagenes correcta"]);
+                // $contador = count($archivosCargados);
+                //  $this->sendResponse(201, ["message" => "Carga de imagenes correcta"]);
             } else {
                 $this->sendResponse(400, ["message" => "Error al cargar imagenes"]);
             }
@@ -108,7 +108,6 @@ class PostController
                 }
 
                 $this->sendResponse(201, ["message" => "Publicacion Correcta"]);
-
             } else {
                 $this->sendResponse(401, ["message" => "Error al crear publicacion"]);
             }
@@ -172,6 +171,22 @@ class PostController
             } else {
                 $this->sendResponse(401, ["message" => "Error al actualizar publicacion"]);
             }
+        }
+    }
+
+    public function delete()
+    {
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+
+        if (strpos($contentType, 'application/json') !== false) {
+            $data = json_decode(file_get_contents("php://input"), true);
+
+            $id = $data['idPost'];
+
+            $this->sendResponse(200, ["message" => $id]);
+        } else {
+            $this->sendResponse(401, ["message" => "Error en formato"]);
         }
     }
 

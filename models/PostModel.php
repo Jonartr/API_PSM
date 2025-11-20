@@ -142,4 +142,8 @@ class Publicaciones
             return  $data;
         }
     }
+
+    public function deletePost($data){
+
+    }
 }
