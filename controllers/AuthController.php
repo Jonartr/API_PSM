@@ -50,7 +50,7 @@ class AuthController
                 $exist = $this->userModel->emailExiste($email);
 
                 if ($exist['email'] == $email) {
-                       $this->sendResponse(404, ["message" => "Correo ya existente"]);
+                    $this->sendResponse(404, ["message" => "Correo ya existente"]);
                 } else {
                     $imagenPath = null;
                     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {

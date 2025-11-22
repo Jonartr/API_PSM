@@ -40,7 +40,8 @@ class Comentario
 
     public function loadComments(){
         try {
-            $query = "SELECT id_comment, id_story, email, text_comment as comment, date_comment FROM comments_story WHERE active = 1;";
+            $query = "SELECT c.id_comment, c.id_story, c.email, c.text_comment as comment,
+             c.date_comment, u.image_avatar, u.alias FROM comments_story c INNER JOIN usuarios u WHERE c.active = 1;";
 
             $stmt = $this->db->prepare($query);
             $stmt->execute();
