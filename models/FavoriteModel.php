@@ -27,7 +27,7 @@ class Favorito
 
             $favorite = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if (!$favorite) {
+            if ($favorite['email']) {
                 $query = "INSERT INTO favorites (id_story, email) VALUES (:id,:email);";
 
                 $stmt = $this->db->prepare($query);
@@ -39,6 +39,7 @@ class Favorito
             }
             else{
                 $data = ["message" => "Post ya esta en favoritos", "data" => $favorite];
+                return $data;
             }
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
