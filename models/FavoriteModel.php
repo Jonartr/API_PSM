@@ -39,17 +39,20 @@ class Favorito
 
         try {
             $query = "SELECT 
-                    publicacion.id_story as 'idfavorito', 
-                    title_story, 
-                    descr_story, 
-                    creation_date,
-                    file_path,
-                    publicacion.email as 'publicador',
-                    favorites.email as 'favorito'
-                  FROM publicacion 
-                  INNER JOIN image_story ON publicacion.id_story = image_story.id_story
-                  INNER JOIN favorites ON publicacion.id_story = favorites.id_story
-                  ORDER BY publicacion.creation_date DESC";
+                    p.id_story as 'idfavorito', 
+                    p.title_story, 
+                    p.descr_story, 
+                    p.creation_date,
+                    f.date_agree,
+                    p.email as 'publicador',
+                    f.email as 'favorito',
+                    GROUP_CONCAT(i.file_path) as file_path
+                FROM publicacion p
+                INNER JOIN image_story i ON p.id_story = i.id_story
+                INNER JOIN favorites f ON p.id_story = f.id_story
+                GROUP BY p.id_story, p.title_story, p.descr_story, p.creation_date, 
+                        f.date_agree, p.email, f.email
+                ORDER BY p.creation_date DESC;";
 
             $stmt = $this->db->prepare($query);
             $stmt->execute();
@@ -57,8 +60,7 @@ class Favorito
 
             $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-             return $favorites;
-   
+            return $favorites;
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
             return $data;
