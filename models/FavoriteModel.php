@@ -19,15 +19,27 @@ class Favorito
             $id = $data['id'];
             $email = $data['email'];
 
-
-            $query = "INSERT INTO favorites (id_story, email) VALUES (:id,:email);";
-
-            $stmt = $this->db->prepare($query);
+            $exist = "SELECT id_story, email FROM favorites WHERE id_story = :id AND email = :email";
+            $stmt = $this->db->prepare($exist);
             $stmt->bindParam(":id", $id);
             $stmt->bindParam(":email", $email);
             $stmt->execute();
 
-            return true;
+            $favorite = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($favorite != null) {
+                $query = "INSERT INTO favorites (id_story, email) VALUES (:id,:email);";
+
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(":id", $id);
+                $stmt->bindParam(":email", $email);
+                $stmt->execute();
+
+                return true;
+            }
+            else{
+                $data = ["message" => "Post ya esta en favoritos", "data" => $favorite];
+            }
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
             return $data;
