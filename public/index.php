@@ -69,7 +69,7 @@ $routes = [
     ],
 
      'favorites/delete' => [
-        'POST' => 'FavoriteController@getFavorite'
+        'POST' => 'FavoriteController@eliminarFavorito'
     ]
 ];
 
