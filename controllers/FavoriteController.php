@@ -29,6 +29,9 @@ class FavoriteController
             if (!isset($idfav) || !isset($email)) {
                 $this->sendResponse(404, ["message" => "Datos incompletos"]);
             }
+            else{
+                 $this->sendResponse(201, ["message" => $result]);
+            }
         }
     }
 
