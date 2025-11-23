@@ -60,6 +60,19 @@ class Favorito
 
             $favorites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+            foreach ($favorites as &$post) {
+                if ($post['file_path']) {
+                    $post['file_path'] = explode(',', $post['file_path']);
+                    // Agregar URL base si es necesario
+                    $post['file_path'] = array_map(function ($path) {
+                        return "$path";
+                    }, $post['file_path']);
+                } else {
+                    $post['file_path'] = [];
+                }
+            }
+
+
             return $favorites;
         } catch (Error $error) {
             $data = ["error" => $error->getMessage()];
