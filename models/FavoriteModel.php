@@ -38,7 +38,7 @@ class Favorito
                 return true;
             }
             else{
-                $data = ["message" => "Post ya esta en favoritos", "data" => $favorite];
+                $data = ["message" => "Post ya esta en favoritos"];
                 return $data;
             }
         } catch (Error $error) {
@@ -56,13 +56,16 @@ class Favorito
                     p.title_story, 
                     p.descr_story, 
                     p.creation_date,
-                    f.date_agree,
+                    u.image_avatar,
+                    u.alias,
                     p.email as 'publicador',
                     f.email as 'favorito',
+					f.date_agree,
                     GROUP_CONCAT(CONCAT(i.file_path)) as file_path
                 FROM publicacion p
                 INNER JOIN image_story i ON p.id_story = i.id_story
                 INNER JOIN favorites f ON p.id_story = f.id_story
+                INNER JOIN usuarios u ON f.email = u.email
                 GROUP BY p.id_story, p.title_story, p.descr_story, p.creation_date, 
                         f.date_agree, p.email, f.email
                 ORDER BY p.creation_date DESC;";
