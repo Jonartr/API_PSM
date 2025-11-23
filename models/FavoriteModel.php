@@ -46,7 +46,7 @@ class Favorito
                     f.date_agree,
                     p.email as 'publicador',
                     f.email as 'favorito',
-                    GROUP_CONCAT(i.file_path) as file_path
+                    GROUP_CONCAT(CONCAT(i.file_path)) as file_path
                 FROM publicacion p
                 INNER JOIN image_story i ON p.id_story = i.id_story
                 INNER JOIN favorites f ON p.id_story = f.id_story
