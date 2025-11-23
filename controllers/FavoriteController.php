@@ -28,17 +28,40 @@ class FavoriteController
 
             if (!isset($idfav) || !isset($email)) {
                 $this->sendResponse(404, ["message" => "Datos incompletos"]);
+            } else {
+                $this->sendResponse(201, ["message" => $result]);
+            }
+        }
+    }
+
+    public function eliminarFavorito()
+    {
+        if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+             $data = json_decode(file_get_contents("php://input"), true);
+
+            $idfav = $data['id'];
+            $email = $data['email'];
+
+            $favData = [
+                'id' =>  $idfav,
+                'email' =>  $email
+            ];
+
+            $result = $this->Favorite->deleteFavorite($favData);
+
+            if($result){
+                 $this->sendResponse(201, ["message" => "Favorito eliminado"]);
             }
             else{
-                 $this->sendResponse(201, ["message" => $result]);
+                 $this->sendResponse(401, ["message" => "Error al eliminar favorito"]);
             }
         }
     }
 
     public function getFavorite()
     {
-                $result = $this->Favorite->loadFavorite();
-                $this->sendResponse(200, $result);
+        $result = $this->Favorite->loadFavorite();
+        $this->sendResponse(200, $result);
     }
 
     private function sendResponse($statusCode, $data)

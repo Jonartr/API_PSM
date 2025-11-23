@@ -47,6 +47,25 @@ class Favorito
         }
     }
 
+    public function deleteFavorite($data){
+          try {
+
+            $id = $data['id'];
+            $email = $data['email'];
+
+            $exist = "DELETE FROM favorites WHERE idfavorito = :id AND email = :email";
+            $stmt = $this->db->prepare($exist);
+            $stmt->bindParam(":id", $id);
+            $stmt->bindParam(":email", $email);
+            $stmt->execute();
+
+            return true;
+        } catch (Error $error) {
+            $data = ["error" => $error->getMessage()];
+            return $data;
+        }
+    }
+
     public function loadFavorite()
     {
 
