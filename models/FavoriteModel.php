@@ -53,7 +53,7 @@ class Favorito
             $id = $data['id'];
             $email = $data['email'];
 
-            $exist = "DELETE FROM favorites WHERE id_favorite = :id AND email = :email";
+            $exist = "DELETE FROM favorites WHERE id_story = :id AND email = :email";
             $stmt = $this->db->prepare($exist);
             $stmt->bindParam(":id", $id);
             $stmt->bindParam(":email", $email);
