@@ -44,7 +44,7 @@ class Comentario
             $id = $data['id'];
             $email = $data['email'];
 
-            $query = "DELETE FROM comments WHERE id_story = :id AND email = :email";
+            $query = "DELETE FROM comments_story WHERE id_comment = :id AND email = :email";
 
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(":id", $id);
