@@ -34,13 +34,36 @@ class CommentController
             $result = $this->Comment->insertarComentario($commentData);
 
             if ($result) {
-                $this->sendResponse(201, ["message" => "Comentario agregado", "data" => $result]);
+                $this->sendResponse(201, ["message" => "Comentario agregado"]);
             } else {
-                $this->sendResponse(404, ["message" => "Error comentario", "data" => $commentData]);
+                $this->sendResponse(404, ["message" => "Error comentario", "data" => $result]);
             }
-
         } else {
             $this->sendResponse(404, ["message" => "Error de JSON"]);
+        }
+    }
+
+    public function deleteComments()
+    {
+        if ($_SERVER['CONTENT_TYPE'] === 'application/json') {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $id = $data['id'];
+            $email = $data['email'];
+
+             $commentData = [
+                'id' =>  $id,
+                'email' =>  $email
+            ];
+
+               $result = $this->Comment->eliminarComentario($commentData);
+
+               
+            if ($result) {
+                $this->sendResponse(201, ["message" => "Comentario agregado"]);
+            } else {
+                $this->sendResponse(404, ["message" => "Error al borrar comentario", "data" => $result]);
+            }
+
         }
     }
 

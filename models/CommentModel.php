@@ -32,13 +32,34 @@ class Comentario
 
             return true;
         } catch (Error $error) {
-             $data = ["error" => $error->getMessage()];
+            $data = ["error" => $error->getMessage()];
             return  $data;
         }
     }
 
+    public function eliminarComentario($data)
+    {
+        try {
 
-    public function loadComments(){
+            $id = $data['id'];
+            $email = $data['email'];
+
+            $query = "DELETE FROM comments WHERE id_story = :id AND email = :email";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(":id", $id);
+            $stmt->bindParam(":email", $email);
+            $stmt->execute();
+
+            return true;
+        } catch (Error $error) {
+            $data = ["error" => $error->getMessage()];
+            return  $data;
+        }
+    }
+
+    public function loadComments()
+    {
         try {
             $query = "SELECT c.id_comment, c.id_story, c.email, c.text_comment as comment,
              c.date_comment, u.image_avatar, u.alias FROM comments_story c INNER JOIN usuarios u on c.email = u.email WHERE c.active = 1;";
@@ -48,10 +69,9 @@ class Comentario
 
             $comments =  $stmt->fetchAll(PDO::FETCH_ASSOC);;
 
-                return $comments;
-
+            return $comments;
         } catch (Error $error) {
-             $data = ["error" => $error->getMessage()];
+            $data = ["error" => $error->getMessage()];
             return  $data;
         }
     }

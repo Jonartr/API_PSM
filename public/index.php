@@ -51,9 +51,11 @@ $routes = [
         'GET' => 'PostController@getpost'
     ],
 
-
     'likes/toggle' => ['POST' => 'LikeController@toggle'],
+
     'likes/check' => ['GET' => 'LikeController@checkLike'],
+
+    'comments/delete' => ['POST' => 'CommentController@deleteComments'],
 
     'comments' => [
         'POST' => 'CommentController@newcomment',
@@ -68,7 +70,7 @@ $routes = [
         'GET' => 'FavoriteController@getFavorite'
     ],
 
-     'favorites/delete' => [
+    'favorites/delete' => [
         'POST' => 'FavoriteController@eliminarFavorito'
     ]
 ];
